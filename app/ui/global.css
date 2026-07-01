@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+@keyframes kenburns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); }
+}
+.animate-ken-burns {
+  animation: kenburns 10s ease-out infinite alternate;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.custom-toast {
+  animation: slideUp 0.3s ease-out;
+  background: rgba(12, 12, 12, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(220, 38, 38, 0.1) !important;
+}
+
+.stroke-text {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+  color: transparent;
+}
+@layer base {
+  .stroke-text {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.1);
+    color: transparent;
+  }
+}
+
+/* Ẩn thanh cuộn nhưng vẫn giữ tính năng cuộn */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Tùy chỉnh cho toàn trang nếu muốn mượt hơn */
+html {
+  scroll-behavior: smooth;
+}
