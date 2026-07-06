@@ -13,18 +13,19 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
   const [isLoading, setIsLoading] = useState(true);
   const [filterRating, setFilterRating] = useState<number>(0);
   
-  // 🎯 UI States
+  // UI States
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   
-  // 🎯 Edit States
+  // Edit States
   const [editingReview, setEditingReview] = useState<any | null>(null);
   const [editRating, setEditRating] = useState<number>(5);
   const [editComment, setEditComment] = useState<string>("");
   const [editFile, setEditFile] = useState<File | null>(null);
   const [editPreview, setEditPreview] = useState<string | null>(null);
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const editFileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     try {
@@ -67,9 +68,15 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
   const handleDelete = (reviewId: number) => {
     setOpenMenuId(null);
     toast((t) => (
-      <div className="text-white p-1">
-        <p className="text-[10px] font-bold uppercase mb-3 tracking-widest text-zinc-300">Xác nhận xóa đánh giá này?</p>
-        <div className="flex gap-2">
+      <div className="text-slate-800 p-1">
+        <p className="text-xs font-bold mb-3 tracking-wide text-slate-700">Xác nhận xóa đánh giá này?</p>
+        <div className="flex gap-2 justify-end">
+          <button 
+            onClick={() => toast.dismiss(t.id)} 
+            className="bg-slate-100 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase hover:bg-slate-200 transition-all text-slate-600 border border-slate-200"
+          >
+            Hủy
+          </button>
           <button 
             onClick={async () => {
               toast.dismiss(t.id);
@@ -81,19 +88,13 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
                 } else toast.error("Lỗi khi xóa!");
               } catch (err) { toast.error("Lỗi máy chủ!"); }
             }} 
-            className="bg-red-600 px-4 py-2 rounded-lg text-[9px] font-black uppercase hover:bg-red-700 transition-all shadow-md shadow-red-900/20"
+            className="bg-red-600 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase hover:bg-red-700 text-white transition-all shadow-sm"
           >
-            Xóa
-          </button>
-          <button 
-            onClick={() => toast.dismiss(t.id)} 
-            className="bg-zinc-800 px-4 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-zinc-700 transition-all text-zinc-300"
-          >
-            Hủy
+            Xóa vĩnh viễn
           </button>
         </div>
       </div>
-    ), { style: { background: '#09090b', border: '1px solid #1c1c1f', borderRadius: '12px' } });
+    ), { style: { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '14px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' } });
   };
 
   const openEditModal = (review: any) => {
@@ -140,93 +141,109 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
 
   if (isLoading) return (
     <div className="flex justify-center py-20">
-      <Loader2 className="animate-spin text-red-600" size={40} />
+      <Loader2 className="animate-spin text-red-600" size={32} />
     </div>
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 relative">
+    <div className="space-y-6 text-slate-600">
       
-      {/* Header & Filter */}
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8 relative z-0">
-        <div className="space-y-2">
-          <h3 className="text-red-600 font-black uppercase tracking-[0.4em] italic text-[10px]">Audience Voices</h3>
-          <h2 className="text-4xl font-[1000] italic text-white uppercase tracking-tighter">Đánh giá từ người xem</h2>
+      {/* Thanh bộ lọc thiết kế Light Mode */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
+        <div>
+          <span className="text-[9px] font-black uppercase tracking-widest text-red-600">Audience Voice</span>
+          <h2 className="text-xl font-black text-slate-800 tracking-tight uppercase">Cộng đồng đánh giá</h2>
         </div>
         
-        <div className="flex bg-zinc-950 p-1 rounded-2xl border border-white/5 overflow-x-auto no-scrollbar">
+        <div className="flex gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/60 overflow-x-auto no-scrollbar">
           {[0, 5, 4, 3, 2, 1].map((star) => (
-            <button key={star} onClick={() => setFilterRating(star)}
-              className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all duration-300 shrink-0 ${
-                filterRating === star ? 'bg-red-600 text-white shadow-lg shadow-red-900/50' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'
-              }`}>
+            <button 
+              key={star} 
+              onClick={() => setFilterRating(star)}
+              className={`px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all duration-200 whitespace-nowrap ${
+                filterRating === star 
+                  ? 'bg-red-600 text-white shadow-sm' 
+                  : 'text-slate-500 hover:text-slate-800 hover:bg-white'
+              }`}
+            >
               {star === 0 ? "Tất cả" : `${star} ★`}
             </button>
           ))}
         </div>
       </div>
 
-      {/* 🎯 DANH SÁCH ĐÁNH GIÁ */}
-      <div className="max-h-[600px] overflow-y-auto pr-3 modern-scrollbar space-y-4">
+      {/* Danh sách Cards Light Mode trắng giấy tinh tế */}
+      <div className="max-h-[650px] overflow-y-auto pr-2 modern-scrollbar space-y-4 relative">
         {filteredReviews.length > 0 ? (
           filteredReviews.map((review) => {
             const isOwner = currentUser && (currentUser.id === review.user?.userId || currentUser.userId === review.user?.userId || currentUser.email === review.user?.email);
 
             return (
-              <div key={review.id} className={`bg-[#0a0a0a] border border-white/5 p-5 md:p-6 rounded-[1.5rem] hover:border-red-600/30 transition-all group hover:bg-[#0d0d0d] shadow-xl flex flex-col relative ${openMenuId === review.id ? 'z-50' : 'z-0'}`}>
-                
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-white border border-white/5 group-hover:border-red-600/50 transition-colors shrink-0 shadow-inner overflow-hidden">
-                      <User size={18} className="text-zinc-500" />
+              <div 
+                key={review.id} 
+                className={`bg-white border border-slate-200/80 p-5 rounded-2xl hover:border-slate-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all flex flex-col relative ${
+                  openMenuId === review.id ? 'z-40' : 'z-0'
+                }`}
+              >
+                {/* Dải line màu đỏ tinh tế phía góc trái khi là review của chính mình */}
+                {isOwner && (
+                  <div className="absolute top-0 bottom-0 left-0 w-[4px] bg-red-600 rounded-l-2xl" />
+                )}
+
+                {/* Phần thông tin User Header */}
+                <div className="flex justify-between items-start gap-4 mb-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-200 shrink-0 overflow-hidden">
+                      <User size={16} />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-white font-black text-sm uppercase tracking-wider">{getFullName(review.user)}</p>
-                        {isOwner && <span className="bg-red-600/20 text-red-500 border border-red-500/20 text-[7px] font-black px-1.5 py-0.5 rounded uppercase tracking-widest">Của Bạn</span>}
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-slate-800 font-bold text-xs uppercase tracking-wide truncate">{getFullName(review.user)}</span>
+                        {isOwner && (
+                          <span className="bg-red-50 text-red-600 border border-red-100 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
+                            Của Bạn
+                          </span>
+                        )}
                       </div>
-                      <p className="text-zinc-600 text-[9px] font-bold flex items-center gap-1 uppercase mt-0.5">
+                      <span className="text-slate-400 text-[9px] font-medium flex items-center gap-1 mt-0.5">
                         <Calendar size={10}/> {format(new Date(review.createdAt), 'dd/MM/yyyy', { locale: vi })}
-                      </p>
+                      </span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-0.5 bg-zinc-950 px-2.5 py-1 rounded-full border border-white/5 shadow-inner shrink-0">
+                  {/* Cụm sao đỏ sang trọng & Menu tác vụ */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex gap-0.5 bg-slate-50 px-2 py-1 rounded-lg border border-slate-200/60">
                       {[...Array(5)].map((_, i) => {
                         const isFilled = i < Math.floor(review.rating);
-                        return <Star key={i} size={11} fill={isFilled ? "#dc2626" : "none"} className={isFilled ? "text-red-600" : "text-zinc-800"} />;
+                        return <Star key={i} size={10} fill={isFilled ? "#dc2626" : "none"} className={isFilled ? "text-red-600" : "text-slate-200"} />;
                       })}
                     </div>
 
-                    {/* 🎯 MENU 3 CHẤM ĐÃ FIX LỖI BỊ ĐÈ */}
                     {isOwner && (
                       <div className="relative">
                         <button 
                           onClick={() => setOpenMenuId(openMenuId === review.id ? null : review.id)}
-                          className="p-1.5 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors relative z-20"
+                          className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors relative z-20"
                         >
-                          <MoreVertical size={16} />
+                          <MoreVertical size={14} />
                         </button>
                         
                         {openMenuId === review.id && (
                           <>
-                            {/* Màn chắn vô hình phía sau menu nhưng đè lên toàn trang */}
                             <div className="fixed inset-0 z-[60]" onClick={() => setOpenMenuId(null)} />
-                            
-                            {/* Menu thực sự */}
-                            <div className="absolute right-0 top-full mt-2 w-36 bg-[#111116]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in slide-in-from-top-2">
+                            <div className="absolute right-0 top-full mt-1 w-32 bg-white border border-slate-200 rounded-xl shadow-xl p-1 z-[70] animate-in fade-in slide-in-from-top-1">
                               <button 
                                 onClick={() => openEditModal(review)}
-                                className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[10px] font-bold uppercase tracking-wider text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-all"
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-all"
                               >
-                                <Edit3 size={14} /> Chỉnh sửa
+                                <Edit3 size={12} className="text-slate-400" /> Chỉnh sửa
                               </button>
                               <button 
                                 onClick={() => handleDelete(review.id)}
-                                className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-red-500/10 rounded-lg transition-all mt-0.5"
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50 rounded-lg transition-all mt-0.5"
                               >
-                                <Trash2 size={14} /> Xóa bài
+                                <Trash2 size={12} /> Xóa bài
                               </button>
                             </div>
                           </>
@@ -236,105 +253,104 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
                   </div>
                 </div>
 
+                {/* Thân bình luận */}
                 {review.isHidden ? (
-                  <div className="bg-red-950/20 border border-red-900/30 p-3 rounded-xl flex items-center gap-2 mt-2">
-                    <ShieldAlert size={14} className="text-red-500" />
-                    <p className="text-red-400 text-xs font-bold italic">Đánh giá đã bị quản trị viên ẩn do vi phạm quy tắc cộng đồng: {review.hiddenReason}</p>
+                  <div className="bg-red-50 border border-red-100 p-3 rounded-xl flex items-center gap-2 mt-1">
+                    <ShieldAlert size={14} className="text-red-500 shrink-0" />
+                    <p className="text-red-700 text-[11px] font-medium">Bình luận bị ẩn do vi phạm tiêu chuẩn: {review.hiddenReason}</p>
                   </div>
                 ) : (
-                  <>
-                    <p className="text-zinc-400 text-[13px] italic leading-relaxed pl-3 border-l-2 border-red-600/20 group-hover:border-red-600/60 transition-colors">
-                      "{review.comment}"
+                  <div className="space-y-3 pl-1">
+                    <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line font-normal">
+                      {review.comment}
                     </p>
 
                     {review.imageUrl && (
                       <div 
                         onClick={() => setSelectedImage(review.imageUrl.startsWith('http') ? review.imageUrl : getImageUrl(review.imageUrl))}
-                        className="mt-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 relative cursor-pointer group/img shadow-md hover:border-red-600/50 transition-all"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-slate-200 relative cursor-pointer group/img shadow-sm hover:border-slate-300 transition-all"
                       >
                         <img 
                           src={review.imageUrl.startsWith('http') ? review.imageUrl : getImageUrl(review.imageUrl)} 
-                          alt="Review Thumbnail" 
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
+                          alt="Thumbnail" 
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                          <Maximize2 size={16} className="text-white drop-shadow-md" />
+                        <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                          <Maximize2 size={12} className="text-white" />
                         </div>
                       </div>
                     )}
-                  </>
+                  </div>
                 )}
-
               </div>
             );
           })
         ) : (
-          <div className="py-24 text-center border border-dashed border-white/10 rounded-[3rem] bg-zinc-950/20">
-            <p className="text-zinc-600 font-bold uppercase tracking-widest text-xs italic">Chưa có đánh giá nào cho bộ phim này</p>
+          <div className="py-16 text-center border border-dashed border-slate-200 rounded-2xl bg-white">
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Chưa có đánh giá nào cho phim này</p>
           </div>
         )}
       </div>
 
-      {/* 🎯 MODAL SỬA ĐÁNH GIÁ */}
+      {/* MODAL SỬA ĐÁNH GIÁ (Light Mode đồng bộ) */}
       {editingReview && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-gradient-to-b from-[#0a0a0f] to-[#050508] border border-white/10 rounded-3xl w-full max-w-lg shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div className="flex justify-between items-center p-6 border-b border-white/5 bg-[#050508]">
-              <h2 className="text-xl font-black uppercase text-white tracking-wider flex items-center gap-2">
-                <Edit3 size={18} className="text-red-500" /> Sửa đánh giá
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50">
+              <h2 className="text-sm font-black uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                <Edit3 size={16} className="text-red-600" /> Cập nhật đánh giá
               </h2>
-              <button onClick={() => setEditingReview(null)} className="p-2 text-zinc-500 hover:text-white bg-white/5 hover:bg-red-600 rounded-xl transition-all">
-                <X size={16} />
+              <button onClick={() => setEditingReview(null)} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all">
+                <X size={14} />
               </button>
             </div>
             
-            <form onSubmit={handleUpdateSubmit} className="p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Đánh giá của bạn</label>
-                <div className="flex items-center gap-2">
+            <form onSubmit={handleUpdateSubmit} className="p-5 space-y-5">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Điểm đánh giá</label>
+                <div className="flex items-center gap-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 w-fit">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star 
                       key={star} 
-                      size={28} 
+                      size={22} 
                       onClick={() => setEditRating(star)}
-                      fill={star <= editRating ? "#f59e0b" : "none"} 
-                      className={`cursor-pointer transition-all hover:scale-110 ${star <= editRating ? "text-amber-500" : "text-zinc-700"}`} 
+                      fill={star <= editRating ? "#eab308" : "none"} 
+                      className={`cursor-pointer transition-all ${star <= editRating ? "text-yellow-500" : "text-slate-200"}`} 
                     />
                   ))}
-                  <span className="ml-3 text-amber-500 font-black text-xl italic">{editRating}.0</span>
+                  <span className="ml-2 text-yellow-600 font-black text-sm italic">{editRating}.0</span>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Cảm nhận (Tối thiểu 10 ký tự)</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Cảm nhận của bạn (Tối thiểu 10 ký tự)</label>
                 <textarea 
                   required
                   rows={4}
                   value={editComment}
                   onChange={(e) => setEditComment(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all custom-scrollbar"
-                  placeholder="Chia sẻ cảm nghĩ chân thực của bạn..."
+                  className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all custom-scrollbar resize-none"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Ảnh đính kèm (Thay ảnh mới nếu muốn)</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Hình ảnh đính kèm</label>
                 <div 
-                  onClick={() => fileInputRef.current?.click()} 
-                  className="w-24 h-24 bg-black/40 border border-white/10 border-dashed hover:border-red-500/50 rounded-2xl flex items-center justify-center cursor-pointer overflow-hidden group transition-all"
+                  onClick={() => editFileInputRef.current?.click()} 
+                  className="w-20 h-20 bg-slate-50 border border-slate-200 border-dashed hover:border-slate-300 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden group transition-all"
                 >
                   {editPreview ? (
-                    <img src={editPreview} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" alt="Preview" />
+                    <img src={editPreview} className="w-full h-full object-cover group-hover:scale-105 transition-all" alt="Preview" />
                   ) : (
-                    <div className="text-center text-zinc-600 group-hover:text-red-500 transition-colors">
-                      <Upload size={20} className="mx-auto mb-1" />
+                    <div className="text-center text-slate-400 hover:text-slate-600">
+                      <Upload size={16} className="mx-auto mb-1" />
                       <span className="text-[8px] font-black uppercase">Tải ảnh</span>
                     </div>
                   )}
                 </div>
                 <input 
                   type="file" 
-                  ref={fileInputRef} 
+                  ref={editFileInputRef} 
                   hidden 
                   accept="image/*" 
                   onChange={(e) => {
@@ -350,33 +366,36 @@ export default function ReviewList({ movieId }: { movieId: string | number }) {
               <button 
                 type="submit" 
                 disabled={isSubmittingEdit}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 shadow-md shadow-red-600/10"
               >
-                {isSubmittingEdit ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-                Cập nhật đánh giá
+                {isSubmittingEdit ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
+                Lưu thay đổi
               </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* 🎯 MODAL LIGHTBOX */}
+      {/* LIGHTBOX PHÓNG TO ẢNH (Giữ phông nền mờ mượt mà) */}
       {selectedImage && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setSelectedImage(null)}>
-          <button className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-red-600 text-white rounded-full transition-all border border-white/10 hover:scale-110 shadow-2xl">
-            <X size={20} />
+        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-5 right-5 p-2 bg-white/10 text-white rounded-lg hover:bg-red-600 transition-all border border-white/10">
+            <X size={16} />
           </button>
-          <img src={selectedImage} alt="Review Fullsize" className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()} />
+          <img src={selectedImage} alt="Fullsize" className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
 
+      {/* Tinh chỉnh thanh Scrollbar mượt mà cho Light Mode */}
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .modern-scrollbar::-webkit-scrollbar { width: 6px; }
+        .modern-scrollbar::-webkit-scrollbar { width: 5px; }
         .modern-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .modern-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        .modern-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.05); border-radius: 4px; }
         .modern-scrollbar::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
       `}</style>
     </div>
   );

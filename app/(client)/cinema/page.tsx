@@ -33,7 +33,6 @@ export default function Cinema() {
 
   useEffect(() => { 
     setIsMounted(true); 
-    // Dùng getLocalISODate để không bị lùi 1 ngày sang giờ UTC
     setSelectedDate(getLocalISODate(new Date()));
   }, []);
 
@@ -79,19 +78,17 @@ export default function Cinema() {
         if (result?.data) {
           const now = new Date(); 
 
-          // 1. 🔥 LỌC BỎ HOÀN TOÀN SUẤT CHIẾU ĐÃ HỦY (CANCELLED / PENDING_CANCEL)
+          // 1. 🔥 LỌC BỎ HOÀN TOÀN SUẤT CHIẾU ĐÃ HỦY
           const filtered = result.data.filter((item: any) => {
             const startTime = new Date(item.startTime);
             const isSameDate = item.startTime.startsWith(selectedDate);
             const isFuture = startTime > now;
-            
-            // Khách hàng chỉ thấy suất chiếu hoạt động bình thường (ACTIVE)
             const isLiveStatus = item.status !== 'CANCELLED' && item.status !== 'PENDING_CANCEL';
             
             return isSameDate && isFuture && isLiveStatus;
           });
 
-          // 2. 🔥 SẮP XẾP SUẤT CHIẾU THEO THỜI GIAN TỪ SỚM ĐẾN MUỘN (Tăng dần)
+          // 2. 🔥 SẮP XẾP SUẤT CHIẾU THEO THỜI GIAN TĂNG DẦN
           filtered.sort((a: any, b: any) => {
             return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
           });
@@ -122,7 +119,7 @@ export default function Cinema() {
                 time: new Date(curr.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }), 
                 roomId: curr.room?.id,
                 status: curr.status 
-            });
+              });
             return acc;
           }, {});
 
@@ -165,24 +162,30 @@ export default function Cinema() {
     });
   }, []);
 
-  if (!isMounted || loading) return <div className="h-screen bg-[#050505] flex items-center justify-center"><Loader2 className="animate-spin text-red-600" size={32} /></div>;
+  if (!isMounted || loading) {
+    return (
+      <div className="h-screen bg-[#f8fafc] flex items-center justify-center">
+        <Loader2 className="animate-spin text-red-600" size={32} />
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-[#050505] min-h-screen pt-20 pb-10 px-4 text-zinc-400 font-sans">
+    <div className="bg-[#f8fafc] min-h-screen pt-24 pb-16 px-4 text-slate-600 font-sans antialiased selection:bg-red-600 selection:text-white">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
         
-        {/* SIDEBAR RẠP */}
+        {/* SIDEBAR RẠP (TONE SÁNG) */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="relative group sticky top-20 z-10 bg-[#050505] pb-2">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-red-500 transition-colors" size={14} />
+          <div className="relative group sticky top-24 z-10 bg-[#f8fafc] pb-2">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-600 transition-colors" size={14} />
             <input 
               onChange={e => setSearchTerm(e.target.value)} 
               placeholder="Tìm nhanh rạp..." 
-              className="w-full bg-zinc-900/40 border border-white/5 py-3 pl-10 pr-4 rounded-xl text-[11px] font-bold outline-none focus:border-red-500/30 transition-all text-white placeholder:text-zinc-600" 
+              className="w-full bg-white border border-slate-200/80 py-3 pl-10 pr-4 rounded-xl text-[11px] font-bold outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 shadow-sm transition-all text-slate-800 placeholder:text-slate-400" 
             />
           </div>
 
-          <div className="max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar pr-2 pb-10">
+          <div className="max-h-[calc(100vh-220px)] overflow-y-auto custom-scrollbar pr-2 pb-10">
             {Object.keys(groupedCinemas).length > 0 ? (
               Object.keys(groupedCinemas).map((parentName) => (
                 <CinemaGroup
@@ -196,31 +199,34 @@ export default function Cinema() {
                 />
               ))
             ) : (
-              <div className="text-center py-10 opacity-30 text-[10px] uppercase font-bold tracking-widest border border-dashed border-white/5 rounded-2xl">
-                Không tìm thấy rạp
+              <div className="text-center py-12 opacity-60 text-[10px] uppercase font-black tracking-widest border border-dashed border-slate-300 bg-white rounded-2xl text-slate-400 shadow-sm">
+                Không tìm thấy rạp phù hợp
               </div>
             )}
           </div>
         </div>
 
-        {/* MAIN CONTENT (LỊCH CHIẾU) */}
+        {/* MAIN CONTENT - LỊCH CHIẾU (TONE SÁNG) */}
         <div className="lg:col-span-8 space-y-5">
-          <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 border-b border-white/5">
+          
+          {/* THANH NGÀY CHIẾU */}
+          <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2.5 border-b border-slate-200/60">
             {dateTabs.map(d => (
               <button 
                 key={d.id} 
                 onClick={() => setSelectedDate(d.id)} 
                 className={`min-w-[55px] py-2.5 flex flex-col items-center rounded-xl border transition-all duration-300 ${
                   selectedDate === d.id 
-                    ? 'bg-red-600 text-white border-red-500 shadow-md scale-105' 
-                    : 'bg-zinc-900/30 text-zinc-500 border-transparent hover:border-white/10 hover:bg-zinc-900/60'
+                    ? 'bg-gradient-to-b from-red-600 to-red-700 text-white border-red-600 shadow-md shadow-red-600/10 scale-105 font-bold' 
+                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800'
                 }`}
               >
-                <span className="text-[7px] font-black uppercase mb-0.5 opacity-80">{d.dayName}</span>
-                <span className="text-base font-black italic">{d.dateNum}</span>
+                <span className={`text-[7px] font-black uppercase mb-0.5 ${selectedDate === d.id ? 'text-white/80' : 'text-slate-400'}`}>{d.dayName}</span>
+                <span className="text-base font-black tracking-tight">{d.dateNum}</span>
               </button>
             ))}
 
+            {/* ĐATE PICKER CHỌN NGÀY KHÁC */}
             <div className="relative shrink-0 h-full">
               <input 
                 type="date" 
@@ -232,50 +238,57 @@ export default function Cinema() {
               />
               <button 
                 onClick={() => dateInputRef.current?.showPicker()}
-                className={`min-w-[55px] h-full flex flex-col items-center justify-center rounded-xl border transition-all duration-300 ${
+                className={`min-w-[55px] p-2.5 flex flex-col items-center justify-center rounded-xl border transition-all duration-300 ${
                   !dateTabs.some(d => d.id === selectedDate) 
-                    ? 'bg-red-600 text-white border-red-500 shadow-md scale-105' 
-                    : 'bg-zinc-900/30 text-zinc-500 border-transparent hover:border-white/10 hover:bg-zinc-900/60'
+                    ? 'bg-gradient-to-b from-red-600 to-red-700 text-white border-red-600 shadow-md scale-105' 
+                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800'
                 }`}
               >
-                <CalendarIcon size={14} className="mb-1 opacity-80" />
-                <span className="text-[7px] font-black uppercase">Khác</span>
+                <CalendarIcon size={14} className="mb-0.5 opacity-90" />
+                <span className="text-[7px] font-black uppercase tracking-wider">Khác</span>
               </button>
             </div>
           </div>
 
+          {/* CHỈ BÁO NGÀY ĐANG CHỌN NGOÀI DANH SÁCH 7 NGÀY */}
           {!dateTabs.some(d => d.id === selectedDate) && (
-             <div className="flex items-center gap-2 px-4 py-1.5 bg-red-600/10 border border-red-600/20 rounded-lg w-fit">
-                <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Đang xem:</span>
-                <span className="text-[10px] font-black text-white uppercase italic">{new Date(selectedDate).toLocaleDateString('vi-VN')}</span>
+             <div className="flex items-center gap-2 px-3.5 py-1.5 bg-red-50 border border-red-100 rounded-xl w-fit shadow-sm">
+                <span className="text-[9px] font-black text-red-600 uppercase tracking-widest">Đang xem:</span>
+                <span className="text-[10px] font-black text-slate-700 uppercase">{new Date(selectedDate).toLocaleDateString('vi-VN')}</span>
              </div>
           )}
 
-          <div className="bg-zinc-900/10 rounded-[1.5rem] border border-white/5 p-2 min-h-[400px]">
+          {/* VÙNG HIỂN THỊ DANH SÁCH PHIM & SUẤT CHIẾU */}
+          <div className="bg-white rounded-[1.5rem] border border-slate-200/70 p-3 min-h-[420px] shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
             {fetchingShowtimes ? (
-              <div className="h-[400px] flex items-center justify-center"><Loader2 className="animate-spin text-red-600" size={24} /></div>
+              <div className="h-[400px] flex flex-col items-center justify-center gap-2">
+                <Loader2 className="animate-spin text-red-600" size={24} />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đang đồng bộ suất chiếu...</p>
+              </div>
             ) : movies.length > 0 ? (
-              <div className="grid grid-cols-1 gap-2.5">
+              <div className="grid grid-cols-1 gap-3">
                 {movies.map((m) => (
                   <MovieCard key={m.id} movie={m} onSelect={handleBooking} />
                 ))}
               </div>
             ) : (
-              <div className="h-[400px] flex flex-col items-center justify-center opacity-30">
-                <Clock size={32} className="mb-3 text-zinc-500" />
-                <div className="font-black uppercase text-[10px] italic tracking-widest text-zinc-400">Không có suất chiếu</div>
+              <div className="h-[400px] flex flex-col items-center justify-center text-center p-6">
+                <Clock size={32} className="mb-3 text-slate-300" />
+                <div className="font-black uppercase text-[10px] tracking-widest text-slate-500>">Không có suất chiếu</div>
+                <p className="text-[10px] text-slate-400 mt-1 max-w-xs font-medium">Rạp hiện tại chưa xếp lịch cho ngày này, vui lòng chọn ngày khác hoặc đổi chi nhánh rạp kế bên nhé!</p>
               </div>
             )}
           </div>
         </div>
       </div>
       
+      {/* TÙY CHỈNH SCROLLBAR TONE SÁNG */}
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #dc2626; }
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
       `}</style>
     </div>
   );

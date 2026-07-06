@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { 
-  Loader2, Megaphone, Ticket, ChevronRight, 
-  MapPin, Check, Search, ChevronDown, Calendar 
+  Loader2, ChevronRight, MapPin, Check, Search, 
+  ChevronDown, Calendar, Ticket, ArrowUpRight 
 } from "lucide-react";
 import { apiRequest, getImageUrl } from "@/app/lib/api";
 import Link from "next/link";
@@ -18,6 +18,17 @@ export default function EventsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Đóng dropdown khi click ra ngoài
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const fetchCinemas = async () => {
@@ -53,58 +64,60 @@ export default function EventsPage() {
   }, [selectedCinema]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-8 pb-20 px-4 md:px-10 font-sans">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 pt-12 pb-24 px-4 md:px-10 font-sans antialiased selection:bg-red-50 selection:text-red-600">
+      <div className="max-w-5xl mx-auto">
         
-        {/* HEADER: Gọn hơn */}
-        <header className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="border-l-2 border-red-600 pl-4">
-            <h1 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">
-              Ưu đãi & <span className="text-red-600">Sự kiện</span>
+        {/* --- HEADER PHẲNG HIỆN ĐẠI --- */}
+        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-200">
+          <div className="space-y-1">
+            <span className="text-[10px] font-black text-red-600 uppercase tracking-[0.3em] block">
+              HNA Cinema Live Experience
+            </span>
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-zinc-900">
+              SỰ KIỆN <span className="text-zinc-400">&</span> ƯU ĐÃI
             </h1>
-            <p className="text-[9px] text-zinc-500 uppercase font-bold tracking-[0.3em] mt-1 opacity-60">
-              A&K Cinema Exclusive
-            </p>
           </div>
 
-          {/* DROPDOWN: Thu hẹp chiều rộng */}
-          <div className="relative w-full sm:w-64" ref={dropdownRef}>
+          {/* DROPDOWN CHỌN RẠP */}
+          <div className="relative w-full md:w-72" ref={dropdownRef}>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full flex items-center justify-between bg-zinc-900/40 border border-white/5 px-4 py-2.5 rounded-xl hover:bg-zinc-800 transition-all shadow-lg group"
+              className="w-full h-11 flex items-center justify-between bg-white border border-zinc-200 px-4 rounded-xl hover:border-zinc-300 transition-all shadow-sm group"
             >
               <div className="flex items-center gap-2 overflow-hidden">
-                <MapPin size={14} className="text-red-600 shrink-0" />
-                <span className="text-[11px] font-bold truncate">
-                  {selectedCinema ? selectedCinema.name : "Chọn rạp..."}
+                <MapPin size={14} className="text-red-500 shrink-0" />
+                <span className="text-xs font-bold text-zinc-700 truncate">
+                  {selectedCinema ? selectedCinema.name : "Chọn cụm rạp..."}
                 </span>
               </div>
-              <ChevronDown size={14} className={`text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+              <ChevronDown size={14} className={`text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isOpen && (
-              <div className="absolute z-[100] w-full mt-2 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                <div className="p-2 bg-zinc-800/30">
+              <div className="absolute right-0 z-[100] w-full mt-2 bg-white border border-zinc-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="p-2 bg-zinc-50 border-b border-zinc-100">
                   <div className="relative">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500" size={12} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={13} />
                     <input
                       type="text"
-                      placeholder="Tìm rạp..."
-                      className="w-full bg-black rounded-lg py-1.5 pl-8 pr-3 text-[10px] outline-none"
+                      placeholder="Tìm kiếm vị trí rạp..."
+                      className="w-full bg-white border border-zinc-200 rounded-lg py-1.5 pl-8 pr-3 text-xs outline-none focus:border-red-400 text-zinc-700"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
-                <div className="max-h-60 overflow-y-auto custom-scrollbar text-[11px]">
+                <div className="max-h-56 overflow-y-auto custom-scrollbar text-xs">
                   {cinemas.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase())).map((cinema) => (
                     <button
                       key={cinema.id}
                       onClick={() => { setSelectedCinema(cinema); setIsOpen(false); }}
-                      className="w-full px-4 py-3 text-left hover:bg-red-600 transition-colors flex justify-between items-center border-b border-white/[0.02]"
+                      className="w-full px-4 py-3 text-left hover:bg-zinc-50 transition-colors flex justify-between items-center border-b border-zinc-100/60"
                     >
-                      <span className={selectedCinema?.id === cinema.id ? "text-red-500 font-bold" : "text-zinc-300"}>{cinema.name}</span>
-                      {selectedCinema?.id === cinema.id && <Check size={12} />}
+                      <span className={selectedCinema?.id === cinema.id ? "text-red-600 font-bold" : "text-zinc-600"}>
+                        {cinema.name}
+                      </span>
+                      {selectedCinema?.id === cinema.id && <Check size={14} className="text-red-600" />}
                     </button>
                   ))}
                 </div>
@@ -113,53 +126,81 @@ export default function EventsPage() {
           </div>
         </header>
 
+        {/* --- KHU VỰC NỘI DUNG CHÍNH --- */}
         {loading ? (
-          <div className="flex justify-center py-40"><Loader2 className="animate-spin text-red-600" size={30} /></div>
+          <div className="flex flex-col items-center justify-center py-40 gap-3">
+            <div className="w-9 h-9 border-2 border-red-500/20 border-t-red-600 rounded-full animate-spin" />
+            <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Đang tải dòng sự kiện...</span>
+          </div>
+        ) : promotions.length === 0 ? (
+          <div className="text-center py-20 bg-white border border-dashed border-zinc-200 rounded-2xl shadow-sm">
+            <Ticket size={32} className="text-zinc-300 mx-auto mb-3" />
+            <p className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Không có sự kiện diễn ra tại rạp này</p>
+          </div>
         ) : (
-          /* GRID: Chỉnh col-4 trên màn lớn để card nhỏ lại */
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {promotions.map((p) => {
+          /* BỐ CỤC BẤT ĐỐI XỨNG / DÒNG THỜI GIAN XEN KẼ */
+          <div className="space-y-16">
+            {promotions.map((p, index) => {
               const cleanContent = p.content?.replace(/<[^>]*>?/gm, "") || "";
+              const isEven = index % 2 === 0;
+
               return (
-                <div key={p.id} className="group bg-zinc-900/30 border border-white/5 rounded-2xl overflow-hidden hover:bg-zinc-900/60 transition-all duration-300 flex flex-col">
-                  
-                  {/* IMAGE: Giảm chiều cao xuống h-40 */}
-                  <div className="h-40 relative overflow-hidden bg-zinc-800">
+                <div 
+                  key={p.id} 
+                  className={`flex flex-col lg:flex-row gap-6 lg:gap-10 items-stretch ${
+                    isEven ? "" : "lg:flex-row-reverse"
+                  }`}
+                >
+                  {/* CỘT 1: HÌNH ẢNH TO RỘNG CỰC KỲ ĐIỆN ẢNH */}
+                  <div className="w-full lg:w-[52%] relative rounded-2xl overflow-hidden bg-zinc-100 aspect-[16/9] group shadow-sm border border-zinc-200">
                     {p.thumbnail && (
                       <img
                         src={getImageUrl(p.thumbnail)}
                         alt={p.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+                        className="w-full h-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-102 transition-all duration-700 ease-out"
                       />
                     )}
+                    
+                    {/* Voucher Tag bọc góc xịn hơn */}
                     {p.voucher?.discountValue > 0 && (
-                      <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[9px] font-black px-2 py-1 rounded-md shadow-lg">
-                        -{Number(p.voucher.discountValue / 1000)}K
+                      <div className="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-bold tracking-wider px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+                        Quà tặng -{Number(p.voucher.discountValue / 1000)}K
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-transparent to-transparent" />
                   </div>
 
-                  {/* CONTENT: Nhỏ chữ lại */}
-                  <div className="p-4 flex flex-col flex-1">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <span className="w-4 h-[1px] bg-red-600"></span>
-                      <span className="text-[8px] font-bold text-red-600 uppercase tracking-widest">Promotion</span>
+                  {/* CỘT 2: THÔNG TIN TẬP TRUNG TỐI GIẢN */}
+                  <div className="w-full lg:w-[48%] flex flex-col justify-center py-2">
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <span className="text-[10px] font-mono text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200">
+                        #{String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-[9px] font-bold text-red-600 uppercase tracking-widest">
+                        CHƯƠNG TRÌNH ĐẶC BIỆT
+                      </span>
                     </div>
 
-                    <h3 className="text-xs font-bold uppercase mb-2 line-clamp-2 italic tracking-tight leading-snug group-hover:text-red-500 transition-colors">
+                    <h3 className="text-lg md:text-xl font-bold uppercase tracking-tight text-zinc-900 mb-2.5 leading-snug group-hover:text-red-600 transition-colors">
                       {p.title}
                     </h3>
 
-                    <p className="text-[10px] text-zinc-500 line-clamp-2 mb-4 italic opacity-80 leading-relaxed">
+                    <p className="text-xs text-zinc-400 line-clamp-3 leading-relaxed mb-6 font-normal">
                       {cleanContent}
                     </p>
 
-                    <Link href={`/events/${p.id}`} className="mt-auto">
-                      <button className="w-full py-2 bg-zinc-800/50 border border-white/5 text-white text-[9px] font-bold uppercase rounded-xl hover:bg-red-600 hover:border-red-600 transition-all flex items-center justify-center gap-2 tracking-widest">
-                        Chi tiết <ChevronRight size={10} />
-                      </button>
-                    </Link>
+                    <div className="mt-auto pt-4 border-t border-zinc-100 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-zinc-400">
+                        <Calendar size={12} />
+                        <span className="text-[10px] font-medium">Đang diễn ra</span>
+                      </div>
+
+                      <Link href={`/events/${p.id}`}>
+                        <button className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-zinc-800 hover:text-red-600 transition-colors group/btn">
+                          Khám phá ưu đãi 
+                          <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               );
@@ -169,8 +210,10 @@ export default function EventsPage() {
       </div>
 
       <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f8f9fa; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d4d4d8; }
       `}</style>
     </div>
   );

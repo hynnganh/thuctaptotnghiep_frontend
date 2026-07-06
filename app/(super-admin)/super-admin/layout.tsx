@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   LayoutDashboard, Film, Users, MapPin, 
-  LogOut, Search, Menu, Zap, Calendar, 
-  BarChart3, Fingerprint, Ticket, Tag, 
-  Box, CalendarDays, ShoppingBag, SlidersHorizontal, Layers
+  LogOut, Search, Menu, Zap, Ticket, Tag, 
+  Box, CalendarDays, ShoppingBag, Layers,
+  Fingerprint, MonitorPlay, BarChart3
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { apiSuperAdminRequest } from '@/app/lib/api'; 
 
 export default function SuperAdminLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [adminInfo, setAdminInfo] = useState<any>(null); 
-  const [cinemaStats, setCinemaStats] = useState<any[]>([]); 
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,18 +39,14 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
       }
 
       try {
-        // 1. Fetch thông tin root account
-        const adminRes = await fetch('https://akcinema.vercel.app/api/v1/users/me', {
-          // const adminRes = await fetch('http://localhost:3000/api/v1/users/me', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        // FIX: Bỏ tham số thứ 3 thừa vì apiSuperAdminRequest chỉ nhận (endpoint, options)
+        const adminRes = await apiSuperAdminRequest('/api/v1/users/me', {});
         
         if (adminRes.ok) {
           const data = await adminRes.json();
           setAdminInfo(data.data?.user || data.data);
         } else if (adminRes.status === 401 || adminRes.status === 403) {
           handleLogout();
-          return;
         }
       } catch (error) {
         console.error("Lỗi fetch dữ liệu hệ thống:", error);
@@ -60,8 +56,8 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
     fetchData();
   }, [handleLogout]);
 
-  // Đã chuẩn hóa và thay thế các icon trùng lặp để menu trực quan hơn
-  const MENU_ITEMS = [
+  // Bọc vào useMemo để tránh khởi tạo lại mảng menu mỗi lần component re-render
+  const MENU_ITEMS = useMemo(() => [
     { label: "Tổng quan", icon: <LayoutDashboard size={16} />, href: "/super-admin" },
     { label: "Thể loại Phim", icon: <Layers size={16} />, href: "/super-admin/genre" },
     { label: "Phim ảnh", icon: <Film size={16} />, href: "/super-admin/movie" },
@@ -69,13 +65,13 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
     { label: "Lịch chiếu", icon: <CalendarDays size={16} />, href: "/super-admin/showtime" },
     { label: "Sự kiện & Ưu đãi", icon: <Tag size={16} />, href: "/super-admin/event" },
     { label: "Voucher", icon: <Zap size={16} />, href: "/super-admin/voucher" },
-    { label: "Banner quảng cáo", icon: <BarChart3 size={16} />, href: "/super-admin/banner" },
+    { label: "Banner quảng cáo", icon: <MonitorPlay size={16} />, href: "/super-admin/banner" },
     { label: "Quản lý đơn hàng", icon: <ShoppingBag size={16} />, href: "/super-admin/order" },
     { label: "Người dùng", icon: <Users size={16} />, href: "/super-admin/user" },
     { label: "Giá vé & Ghế", icon: <Ticket size={16} />, href: "/super-admin/seat-price" },
     { label: "Combo bắp nước", icon: <Box size={16} />, href: "/super-admin/food-combo" },
     { label: "Thống kê doanh thu", icon: <BarChart3 size={16} />, href: "/super-admin/analytic" },
-  ];
+  ], []);
 
   return (
     <div className="min-h-screen bg-[#020203] text-zinc-400 flex font-sans overflow-hidden select-none antialiased">
@@ -93,7 +89,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
           </div>
           {isSidebarOpen && (
             <div className="flex flex-col animate-in fade-in duration-200">
-              <span className="text-white font-black tracking-tight text-sm leading-none">A&K CINEMA</span>
+              <span className="text-white font-black tracking-tight text-sm leading-none">HNA CINEMA</span>
               <span className="text-[8px] text-red-500 font-bold tracking-widest mt-1 uppercase">Root Executive</span>
             </div>
           )}

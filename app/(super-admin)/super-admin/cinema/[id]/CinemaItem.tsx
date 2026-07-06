@@ -297,7 +297,7 @@ export default function AddCinemaItemModal({
                   ? "border-red-600"
                   : "border-white/5 focus:border-red-600"
               }`}
-              placeholder="VD: Rạp A&K Đường 103"
+              placeholder="VD: Rạp HNA Đường 103"
               value={formData.name}
               onChange={(e) =>
                 setFormData({

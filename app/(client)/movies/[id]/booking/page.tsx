@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, use, useRef } from "react";
-import { ChevronLeft, Loader2, Calendar, ChevronDown, Monitor, MapPin } from "lucide-react";
+import { ChevronLeft, Loader2, Calendar, ChevronDown, Monitor, MapPin, Ticket, Clapperboard } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "../../../../lib/api";
@@ -69,12 +69,11 @@ export default function MovieBookingPage({
       const fetchedShowtimes = res.ok ? data.data : [];
       const now = new Date();
 
-      // 🔥 FILTER SUẤT CHIẾU: Chỉ lấy tương lai và không bị hủy
+      // 🔥 FILTER SUẤT CHIẾU
       const futureShowtimes = fetchedShowtimes.filter((st: any) => {
         try {
           const start = new Date(st.startTime);
           const isFuture = start.getTime() > now.getTime();
-          // Khách hàng chỉ thấy suất chiếu hoạt động bình thường (ACTIVE)
           const isLiveStatus = st.status !== 'CANCELLED' && st.status !== 'PENDING_CANCEL';
           
           return isFuture && isLiveStatus;
@@ -83,7 +82,7 @@ export default function MovieBookingPage({
         }
       });
 
-      // 🔥 SẮP XẾP SUẤT CHIẾU THEO THỜI GIAN TỪ SỚM ĐẾN MUỘN (Tăng dần)
+      // 🔥 SẮP XẾP SUẤT CHIẾU THEO THỜI GIAN
       futureShowtimes.sort((a: any, b: any) => {
         return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
       });
@@ -94,7 +93,7 @@ export default function MovieBookingPage({
       const parentCinemas = [
         ...new Set(
           futureShowtimes.map((st: any) => st.cinemaItem?.cinema?.name || "Khu vực khác")
-        ),
+        )
       ] as string[];
 
       if (parentCinemas.length > 0) {
@@ -124,7 +123,7 @@ export default function MovieBookingPage({
   // GROUP DATA
   const groupedShowtimes = showtimes.reduce((acc: any, st: any) => {
     const parentName = st.cinemaItem?.cinema?.name || "Khu vực khác";
-    const branchName = st.cinemaItem?.name || "Rạp A&K Cinema";
+    const branchName = st.cinemaItem?.name || "Rạp HNA Cinema";
 
     if (!acc[parentName]) {
       acc[parentName] = {};
@@ -158,39 +157,41 @@ export default function MovieBookingPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white font-sans pb-10 selection:bg-red-600">
-      {/* HEADER */}
-      <div className="sticky top-0 bg-[#030303]/95 backdrop-blur-md border-b border-zinc-900/50 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          {/* TOP */}
+    <div className="min-h-screen bg-[#f8fafc] text-slate-700 font-sans pb-16 antialiased selection:bg-red-600 selection:text-white">
+      
+      {/* HEADER TONE SÁNG */}
+      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          
+          {/* TOP BAR */}
           <div className="flex items-center justify-between mb-4">
             <Link href={`/movies/${movieId}`} className="flex items-center gap-3 group">
-              <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                <ChevronLeft size={16} className="text-zinc-400" />
+              <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:border-red-500 group-hover:bg-red-50/50 transition-all duration-300">
+                <ChevronLeft size={18} className="text-slate-500 group-hover:text-red-600 transition-colors" />
               </div>
-              <h1 className="text-[11px] font-black uppercase tracking-widest italic line-clamp-1 max-w-[220px]">
-                {movie?.title || "Đang tải..."}
-              </h1>
+              <div className="space-y-0.5">
+                <span className="block text-[9px] uppercase tracking-widest text-red-600 font-extrabold">Đang lịch đặt vé</span>
+                <h1 className="text-sm font-black uppercase tracking-wide text-slate-800 line-clamp-1 max-w-[200px] sm:max-w-md">
+                  {movie?.title || "Đang tải phim..."}
+                </h1>
+              </div>
             </Link>
 
-            {/* DATE PICKER */}
+            {/* BỘ LỌC LỊCH */}
             <div className="relative">
               <button
                 onClick={() => setShowPicker(!showPicker)}
-                className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 rounded-lg border border-zinc-800 hover:border-red-500/50 transition-all"
+                className="flex items-center gap-2 px-3.5 py-2 bg-white rounded-xl border border-slate-200 hover:border-red-500 hover:bg-slate-50 transition-all duration-300 shadow-sm"
               >
-                <Calendar size={12} className="text-red-500" />
-                <span className="text-[9px] font-bold uppercase">
-                  {new Date(selectedDate).toLocaleDateString("vi-VN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                  })}
+                <Calendar size={13} className="text-red-600" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-700">
+                  Tháng {new Date(selectedDate).toLocaleDateString("vi-VN", { month: "2-digit", day: "2-digit" })}
                 </span>
-                <ChevronDown size={10} className="opacity-50" />
+                <ChevronDown size={11} className="text-slate-400" />
               </button>
 
               {showPicker && (
-                <div className="absolute right-0 mt-2 z-20 bg-zinc-900 border border-zinc-800 rounded-xl p-2 w-40 shadow-2xl">
+                <div className="absolute right-0 mt-2 z-20 bg-white border border-slate-200 rounded-xl p-3 w-48 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
                   <input
                     type="date"
                     value={selectedDate}
@@ -199,97 +200,114 @@ export default function MovieBookingPage({
                       setSelectedDate(e.target.value);
                       setShowPicker(false);
                     }}
-                    className="w-full bg-transparent text-xs p-1 outline-none text-white color-scheme-dark"
+                    className="w-full bg-transparent text-xs p-1.5 outline-none text-slate-800 border border-slate-200 rounded-lg"
                   />
                 </div>
               )}
             </div>
           </div>
 
-          {/* DATE LIST */}
-          <div ref={scrollContainerRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-            {getWeeklyDays().map((d) => (
-              <button
-                key={d.full}
-                onClick={() => setSelectedDate(d.full)}
-                className={`flex flex-col items-center justify-center min-w-[45px] h-12 rounded-lg border transition-all ${
-                  selectedDate === d.full
-                    ? "bg-red-600 border-red-500"
-                    : "bg-zinc-900/30 border-zinc-800 hover:bg-zinc-800/50"
-                }`}
-              >
-                <span className="text-[8px] font-bold opacity-70">{d.name}</span>
-                <span className="text-xs font-black">{d.date}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* MENU CHI NHÁNH */}
-          {!loading && parentList.length > 0 && (
-            <div className="mt-4 border-t border-zinc-800/50 pt-3 flex gap-6 overflow-x-auto scrollbar-hide">
-              {parentList.map((parent) => (
+          {/* THANH LỊCH NGANG */}
+          <div ref={scrollContainerRef} className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-2">
+            {getWeeklyDays().map((d) => {
+              const isSelected = selectedDate === d.full;
+              return (
                 <button
-                  key={parent}
-                  onClick={() => setSelectedParent(parent)}
-                  className={`whitespace-nowrap text-[12px] font-black uppercase transition-all duration-300 pb-2 border-b-2 ${
-                    selectedParent === parent
-                      ? "text-white border-red-600"
-                      : "text-zinc-500 border-transparent hover:text-zinc-300"
+                  key={d.full}
+                  onClick={() => setSelectedDate(d.full)}
+                  className={`flex flex-col items-center justify-center min-w-[50px] h-14 rounded-xl border transition-all duration-300 ${
+                    isSelected
+                      ? "bg-gradient-to-b from-red-600 to-red-700 border-red-600 text-white font-bold shadow-md shadow-red-600/10 scale-102"
+                      : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300"
                   }`}
                 >
-                  {parent}
+                  <span className={`text-[8px] font-extrabold uppercase tracking-widest ${isSelected ? "text-white/80" : "text-slate-400"}`}>{d.name}</span>
+                  <span className="text-sm font-black mt-0.5 tracking-tight">{d.date}</span>
                 </button>
-              ))}
+              );
+            })}
+          </div>
+
+          {/* TABS HỆ THỐNG RẠP CHA */}
+          {!loading && parentList.length > 0 && (
+            <div className="mt-4 border-t border-slate-100 pt-3 flex gap-6 overflow-x-auto scrollbar-hide">
+              {parentList.map((parent) => {
+                const isSelected = selectedParent === parent;
+                return (
+                  <button
+                    key={parent}
+                    onClick={() => setSelectedParent(parent)}
+                    className={`whitespace-nowrap text-xs font-black uppercase tracking-widest pb-2 border-b-2 transition-all duration-300 ${
+                      isSelected
+                        ? "text-red-600 border-red-600 font-black"
+                        : "text-slate-400 border-transparent hover:text-slate-600"
+                    }`}
+                  >
+                    {parent}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
       </div>
 
-      {/* CONTENT */}
-      <div className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
+      {/* DANH SÁCH SUẤT CHIẾU */}
+      <div className="max-w-4xl mx-auto px-4 mt-8 space-y-5">
         {loading ? (
-          <div className="py-20 flex justify-center">
-            <Loader2 className="animate-spin text-red-600" />
+          <div className="py-28 flex flex-col items-center justify-center gap-3">
+            <Loader2 className="animate-spin text-red-600 w-7 h-7" />
+            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Đang tải lịch chiếu...</p>
           </div>
         ) : selectedParent && groupedShowtimes[selectedParent] ? (
           Object.entries(groupedShowtimes[selectedParent]).map(([branchName, times]: any) => (
-            <div key={branchName} className="bg-zinc-900/20 border border-zinc-800/50 rounded-xl p-4">
-              {/* RẠP */}
-              <div className="flex items-center gap-2 mb-4 border-b border-zinc-800 pb-3">
-                <MapPin size={12} className="text-red-500" />
-                <h4 className="text-[12px] font-black tracking-wide text-zinc-100">{branchName}</h4>
+            <div key={branchName} className="bg-white border border-slate-200/70 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all hover:shadow-[0_4px_25px_rgba(0,0,0,0.02)]">
+              
+              {/* TÊN CHI NHÁNH RẠP */}
+              <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3.5">
+                <div className="w-6 h-6 rounded-lg bg-red-50 flex items-center justify-center">
+                  <MapPin size={12} className="text-red-600" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black tracking-wide text-slate-800 uppercase">{branchName}</h4>
+                  <p className="text-[10px] text-slate-400 font-medium flex items-center gap-1 mt-0.5">
+                    <Clapperboard size={10} className="opacity-70" /> Hệ thống phòng chiếu tiêu chuẩn quốc tế
+                  </p>
+                </div>
               </div>
 
-              {/* SHOWTIMES */}
-              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+              {/* LƯỚI SUẤT CHIẾU */}
+              <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
                 {times.map((st: any) => {
                   const format = st.format || "2D Phụ Đề";
                   return (
                     <button
                       key={st.id}
                       onClick={() => handleBookingClick(st.id)}
-                      className="py-2 bg-zinc-950 border border-zinc-800 hover:border-red-500/50 hover:bg-red-500/10 rounded-md transition-all text-center group"
+                      className="p-3 bg-white border border-slate-200 hover:border-red-500 hover:bg-red-50/30 rounded-xl transition-all duration-300 text-center group shadow-sm hover:shadow-md hover:-translate-y-0.5"
                     >
-                      <span className="block text-[13px] font-bold text-white group-hover:text-red-400">
+                      <span className="block text-sm font-black text-slate-800 group-hover:text-red-600 transition-colors tracking-tight">
                         {st.startTime.split("T")[1].substring(0, 5)}
                       </span>
-                      <span className="block text-[8px] font-semibold text-zinc-500 uppercase mt-0.5 group-hover:text-red-500/70">
+                      <span className="block text-[9px] font-extrabold text-slate-400 uppercase mt-0.5 tracking-wide group-hover:text-red-500/80 transition-colors">
                         {format}
                       </span>
                     </button>
                   );
                 })}
               </div>
+
             </div>
           ))
         ) : (
-          <div className="py-20 text-center opacity-30 flex flex-col items-center">
-            <Monitor size={32} className="mb-3 opacity-50" />
-            <p className="text-[12px] uppercase font-bold tracking-widest">
-              Không có suất chiếu
+          /* TRẠNG THÁI KHÔNG CÓ LỊCH CHIẾU */
+          <div className="py-24 text-center bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+            <Monitor size={36} className="mb-3 text-slate-300 mx-auto" />
+            <p className="text-xs uppercase font-black tracking-widest text-slate-600">
+              Không có suất chiếu phù hợp
             </p>
-            <p className="text-[10px] mt-1 font-medium">
-              Vui lòng chọn ngày khác hoặc khu vực khác
+            <p className="text-[10px] mt-1.5 font-medium text-slate-400 max-w-xs mx-auto">
+              Vui lòng đổi ngày chiếu hoặc chọn một hệ thống rạp khác ở thanh menu phía trên nhé!
             </p>
           </div>
         )}
@@ -299,14 +317,8 @@ export default function MovieBookingPage({
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-
         input[type="date"]::-webkit-calendar-picker-indicator {
-          filter: invert(1);
           cursor: pointer;
-        }
-
-        .color-scheme-dark {
-          color-scheme: dark;
         }
       `}</style>
     </div>

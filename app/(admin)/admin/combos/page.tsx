@@ -191,7 +191,7 @@ const startEditing = (combo: ComboAdmin) => {
               <h1 className="text-lg md:text-xl font-black uppercase tracking-tight text-white">Thực đơn chi nhánh</h1>
             </div>
             <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
-              Chi nhánh quản lý: <span className="text-red-500">Hệ thống A&K Cinema</span>
+              Chi nhánh quản lý: <span className="text-red-500">Hệ thống HNA Cinema</span>
             </p>
           </div>
 

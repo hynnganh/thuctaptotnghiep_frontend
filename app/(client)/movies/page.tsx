@@ -125,7 +125,7 @@ export default function TatCaPhim() {
         
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-red-600 font-black tracking-[0.4em] text-[10px] uppercase">
-            <span className="w-16 h-[2px] bg-red-600"></span> A&K Cinema Collection
+            <span className="w-16 h-[2px] bg-red-600"></span> HNA Cinema Collection
           </div>
           <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none italic">
             TẤT CẢ <br />

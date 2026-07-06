@@ -75,10 +75,10 @@ export default function PostSectionCombined() {
   // --- LOADING GIAO DIỆN KHUNG (SKELETON) ---
   if (loading) {
     return (
-      <div className="px-6 md:px-12 py-16 bg-[#0a0a0c]">
+      <div className="px-6 md:px-12 py-16 bg-slate-50">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-[1400px] mx-auto">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-[290px] bg-zinc-900/40 animate-pulse rounded-[2rem] border border-white/5" />
+            <div key={i} className="h-[290px] bg-white animate-pulse rounded-[2rem] border border-slate-200/60 shadow-sm" />
           ))}
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function PostSectionCombined() {
   }
 
   return (
-    <section className="px-6 md:px-12 py-16 bg-[#0a0a0c] relative overflow-hidden text-white">
+    <section className="px-6 md:px-12 py-16 bg-slate-50 relative overflow-hidden text-slate-800">
       {/* Vệt sáng loang màu Pastel Đỏ - Cam chạy ẩn dưới nền */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-gradient-to-r from-red-600/5 to-orange-500/5 blur-[140px] rounded-full pointer-events-none" />
 
@@ -97,7 +97,7 @@ export default function PostSectionCombined() {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
             <button
               onClick={() => setSelectedPostId(null)}
-              className="group flex items-center gap-2 mb-8 text-zinc-400 hover:text-white text-xs font-black uppercase tracking-widest transition-colors"
+              className="group flex items-center gap-2 mb-8 text-slate-500 hover:text-red-600 text-xs font-black uppercase tracking-widest transition-colors"
             >
               <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-red-500" />
               Quay lại danh sách tin
@@ -105,36 +105,34 @@ export default function PostSectionCombined() {
 
             {loadingDetail ? (
               <div className="space-y-6">
-                <div className="w-full h-[380px] bg-zinc-900/50 animate-pulse rounded-[2.5rem]" />
-                <div className="h-10 bg-zinc-900/50 animate-pulse w-3/4 rounded-xl" />
+                <div className="w-full h-[380px] bg-white animate-pulse rounded-[2.5rem] border border-slate-200/60" />
+                <div className="h-10 bg-white animate-pulse w-3/4 rounded-xl border border-slate-200/60" />
                 <div className="space-y-2">
-                  <div className="h-4 bg-zinc-900/50 animate-pulse w-full rounded" />
-                  <div className="h-4 bg-zinc-900/50 animate-pulse w-5/6 rounded" />
+                  <div className="h-4 bg-white animate-pulse w-full rounded border border-slate-200/60" />
+                  <div className="h-4 bg-white animate-pulse w-5/6 rounded border border-slate-200/60" />
                 </div>
               </div>
             ) : (
-              postDetail && (
-                <div className="bg-zinc-950/40 border border-white/5 rounded-[2.5rem] p-6 md:p-10 shadow-2xl backdrop-blur-md">
-                  <div className="w-full h-[380px] overflow-hidden rounded-[1.8rem] mb-8 relative border border-white/5">
-                    <img
-                      src={postDetail.thumbnail}
-                      alt={postDetail.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
-                  </div>
-
-                  <h1 className="text-xl md:text-3xl font-[1000] italic uppercase tracking-tight leading-snug mb-6 text-white">
-                    {postDetail.title}
-                  </h1>
-
-                  <div className="w-12 h-0.5 bg-red-600 rounded-full mb-8 shadow-[0_0_15px_rgba(220,38,38,0.6)]" />
-
-                  <p className="text-zinc-300 text-sm md:text-base leading-8 tracking-wide font-medium whitespace-pre-line">
-                    {postDetail.content}
-                  </p>
+              <div className="bg-white border border-slate-200/60 rounded-[2.5rem] p-6 md:p-10 shadow-[0_12px_32px_rgba(0,0,0,0.04)]">
+                <div className="w-full h-[380px] overflow-hidden rounded-[1.8rem] mb-8 relative border border-slate-100">
+                  <img
+                    src={postDetail?.thumbnail}
+                    alt={postDetail?.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
                 </div>
-              )
+
+                <h1 className="text-xl md:text-3xl font-[1000] italic uppercase tracking-tight leading-snug mb-6 text-slate-800">
+                  {postDetail?.title}
+                </h1>
+
+                <div className="w-12 h-0.5 bg-red-600 rounded-full mb-8 shadow-[0_0_15px_rgba(220,38,38,0.3)]" />
+
+                <p className="text-slate-600 text-sm md:text-base leading-8 tracking-wide font-medium whitespace-pre-line">
+                  {postDetail?.content}
+                </p>
+              </div>
             )}
           </div>
         ) : (
@@ -145,14 +143,14 @@ export default function PostSectionCombined() {
             <div className="flex items-center justify-between mb-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-1 h-7 bg-gradient-to-b from-red-500 to-orange-600 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.6)]" />
+                  <div className="w-1 h-7 bg-gradient-to-b from-red-500 to-orange-600 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.3)]" />
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5">
                     <Sparkles size={11} className="text-red-500 animate-pulse" />
-                    <span className="text-zinc-500 text-[9px] font-black uppercase tracking-[0.25em]">Bản tin nóng</span>
+                    <span className="text-slate-400 text-[9px] font-black uppercase tracking-[0.25em]">Bản tin nóng</span>
                   </div>
-                  <h2 className="text-xl font-[1000] text-white tracking-tighter uppercase leading-none italic mt-0.5">
+                  <h2 className="text-xl font-[1000] text-slate-800 tracking-tighter uppercase leading-none italic mt-0.5">
                     Tin Điện <span className="text-red-600">Ảnh</span>
                   </h2>
                 </div>
@@ -161,7 +159,7 @@ export default function PostSectionCombined() {
 
             {/* --- LƯỚI 4 CỘT TIN TỨC GỌN GÀNG --- */}
             {posts.length === 0 ? (
-              <div className="text-center py-12 text-zinc-600 text-xs uppercase tracking-widest font-mono">
+              <div className="text-center py-12 text-slate-400 text-xs uppercase tracking-widest font-mono bg-white border border-slate-200/60 rounded-[1.8rem]">
                 Hiện tại chưa có bài viết nào mới.
               </div>
             ) : (
@@ -173,47 +171,47 @@ export default function PostSectionCombined() {
                     <div
                       key={post.id}
                       onClick={() => setSelectedPostId(post.id)}
-                      className="group relative flex flex-col h-[290px] rounded-[1.8rem] border border-white/5 bg-gradient-to-b from-zinc-900/30 to-zinc-950/80 hover:border-red-600/20 transition-all duration-500 hover:shadow-[0_0_30px_rgba(220,38,38,0.1)] hover:-translate-y-1 cursor-pointer"
+                      className="group relative flex flex-col h-[290px] rounded-[1.8rem] border border-slate-200/60 bg-white hover:border-red-600/30 transition-all duration-500 hover:shadow-[0_12px_32px_rgba(220,38,38,0.06)] hover:-translate-y-1 cursor-pointer overflow-hidden"
                     >
                       {/* Ảnh nền thu gọn độ cao */}
-                      <div className="h-36 w-full overflow-hidden relative bg-zinc-900 rounded-t-[1.8rem]">
+                      <div className="h-36 w-full overflow-hidden relative bg-slate-100">
                         <img
                           src={post.thumbnail}
                           alt={post.title}
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                         
                         {/* Floating Date Badge thiết kế tối giản */}
-                        <div className="absolute top-3.5 left-3.5 flex flex-col items-center bg-black/60 backdrop-blur-md px-2 py-1 rounded-xl border border-white/10 min-w-[36px] text-center shadow-lg group-hover:border-red-500/30 transition-colors">
-                          <span className="text-white text-xs font-[1000] font-mono leading-none">{day}</span>
-                          <span className="text-zinc-500 text-[8px] font-bold uppercase tracking-wider mt-0.5 border-t border-white/10 pt-0.5 w-full">T{month}</span>
+                        <div className="absolute top-3.5 left-3.5 flex flex-col items-center bg-white/90 backdrop-blur-md px-2 py-1 rounded-xl border border-slate-200/60 min-w-[36px] text-center shadow-sm group-hover:border-red-500/30 transition-colors">
+                          <span className="text-slate-800 text-xs font-[1000] font-mono leading-none">{day}</span>
+                          <span className="text-slate-400 text-[8px] font-bold uppercase tracking-wider mt-0.5 border-t border-slate-100 pt-0.5 w-full">T{month}</span>
                         </div>
 
                         {/* Mũi tên góc chuyển động nhẹ khi hover */}
-                        <div className="absolute top-3.5 right-3.5 w-6 h-6 bg-white/10 backdrop-blur-md rounded-lg border border-white/10 flex items-center justify-center text-white opacity-0 scale-70 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 group-hover:bg-red-600 group-hover:border-transparent">
+                        <div className="absolute top-3.5 right-3.5 w-6 h-6 bg-white/80 backdrop-blur-md rounded-lg border border-slate-200/60 flex items-center justify-center text-slate-700 opacity-0 scale-70 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 group-hover:bg-red-600 group-hover:text-white group-hover:border-transparent">
                           <ArrowUpRight size={12} />
                         </div>
                       </div>
 
                       {/* Content chữ bo đáy */}
-                      <div className="p-4 flex flex-col flex-1 justify-between relative overflow-hidden">
+                      <div className="p-4 flex flex-col flex-1 justify-between relative overflow-hidden bg-white">
                         {/* Text nước mờ ẩn */}
-                        <div className="absolute -bottom-5 right-2 text-white/[0.01] font-[1000] text-5xl italic pointer-events-none select-none uppercase tracking-tighter transition-colors group-hover:text-white/[0.02]">
+                        <div className="absolute -bottom-5 right-2 text-slate-100 font-[1000] text-5xl italic pointer-events-none select-none uppercase tracking-tighter transition-colors group-hover:text-slate-200/60">
                           NEWS
                         </div>
 
                         <div className="space-y-1.5 relative z-10">
-                          <h3 className="text-xs font-black text-white uppercase italic leading-snug tracking-tight group-hover:text-red-500 transition-colors duration-300 line-clamp-2">
+                          <h3 className="text-xs font-black text-slate-800 uppercase italic leading-snug tracking-tight group-hover:text-red-600 transition-colors duration-300 line-clamp-2">
                             {post.title}
                           </h3>
-                          <p className="text-zinc-500 text-[10px] font-medium leading-relaxed line-clamp-2">
+                          <p className="text-slate-400 text-[10px] font-medium leading-relaxed line-clamp-2">
                             {post.content}
                           </p>
                         </div>
                         
                         {/* Line tiến trình trang trí ở đáy */}
-                        <div className="relative h-[2px] w-6 bg-zinc-800 rounded-full overflow-hidden transition-all duration-500 group-hover:w-12">
+                        <div className="relative h-[2px] w-6 bg-slate-100 rounded-full overflow-hidden transition-all duration-500 group-hover:w-12">
                           <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 transform translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                         </div>
                       </div>

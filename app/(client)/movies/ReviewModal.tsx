@@ -18,10 +18,10 @@ export default function ReviewModal({ isOpen, onClose, movieTitle, movieId }: Re
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // 🎯 Thêm State để khóa màn hình khi đánh giá thành công
   const [isSuccess, setIsSuccess] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Đổi tên ref rõ ràng để tránh xung đột DOM chéo
+  const createFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -30,7 +30,7 @@ export default function ReviewModal({ isOpen, onClose, movieTitle, movieId }: Re
       setComment("");
       setImage(null);
       setImagePreview(null);
-      setIsSuccess(false); // Reset lại trạng thái
+      setIsSuccess(false);
     }
   }, [isOpen]);
 
@@ -53,7 +53,7 @@ export default function ReviewModal({ isOpen, onClose, movieTitle, movieId }: Re
     
     const formData = new FormData();
     formData.append("movieId", String(movieId));
-    formData.append("rating", String(rating)); // Backend sẽ nhận số chẵn 1.0, 2.0...
+    formData.append("rating", String(rating));
     formData.append("comment", comment.trim());
     if (image) formData.append("image", image);
 
@@ -67,11 +67,11 @@ export default function ReviewModal({ isOpen, onClose, movieTitle, movieId }: Re
 
       if (response.ok) {
         toast.success("Gửi đánh giá thành công!");
-        setIsSuccess(true); // Khóa Form và hiện thông báo thành công
+        setIsSuccess(true);
         setTimeout(() => {
           onClose();
           window.location.reload(); 
-        }, 2500); // Đóng modal và reload sau 2.5s
+        }, 2500);
       } else {
         toast.error(result.message || "Bạn chưa đủ điều kiện đánh giá phim này!");
       }
@@ -83,82 +83,113 @@ export default function ReviewModal({ isOpen, onClose, movieTitle, movieId }: Re
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-xl bg-black/60 animate-in fade-in duration-300">
-      <Toaster position="top-center" toastOptions={{ style: { background: '#0c0c0e', color: '#fff' } }} />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-md bg-black/70 animate-in fade-in duration-200">
+      <Toaster position="top-center" toastOptions={{ style: { background: '#09090b', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' } }} />
       
       <div className="absolute inset-0" onClick={!isSubmitting ? onClose : undefined} />
-      <div className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-[3rem] p-8 shadow-2xl overflow-hidden">
+      
+      <div className="relative w-full max-w-md bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-2xl overflow-hidden transition-all duration-300">
+        
+        {/* Khung viền Led trang trí mỏng phía trên */}
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-600 to-transparent" />
+
         {!isSubmitting && !isSuccess && (
-          <button onClick={onClose} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-all"><X size={24}/></button>
+          <button onClick={onClose} className="absolute top-5 right-5 text-zinc-500 hover:text-white bg-zinc-900/50 p-1.5 rounded-lg border border-zinc-800 transition-all">
+            <X size={18}/>
+          </button>
         )}
         
-        {/* 🎯 GIAO DIỆN KHÓA KHI ĐÁNH GIÁ THÀNH CÔNG */}
         {isSuccess ? (
-          <div className="py-10 flex flex-col items-center justify-center space-y-4 animate-in zoom-in-95 duration-500">
-            <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-2">
-              <CheckCircle2 size={40} className="text-emerald-500" />
+          <div className="py-8 flex flex-col items-center justify-center space-y-4 animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-center animate-bounce">
+              <CheckCircle2 size={32} className="text-emerald-500" />
             </div>
-            <h2 className="text-2xl font-[1000] italic text-white uppercase text-center">BẠN ĐÃ ĐÁNH GIÁ</h2>
-            <p className="text-zinc-400 text-sm font-medium text-center px-4">
-              Cảm ơn bạn đã chia sẻ cảm nhận về tác phẩm <span className="text-red-500 font-bold">"{movieTitle}"</span>. Đánh giá của bạn đã được ghi nhận vào hệ thống!
+            <h2 className="text-xl font-black tracking-wider text-white uppercase text-center">ĐÃ GHI NHẬN ĐÁNH GIÁ</h2>
+            <p className="text-zinc-400 text-xs font-medium text-center px-4 leading-relaxed">
+              Cảm ơn bạn đã chia sẻ cảm nhận về tác phẩm <span className="text-red-500 font-bold">"{movieTitle}"</span>. Hệ thống đang tải lại dữ liệu...
             </p>
           </div>
         ) : (
-          /* GIAO DIỆN FORM ĐÁNH GIÁ BÌNH THƯỜNG */
           <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-red-600 italic">Đánh giá phim</h3>
-              <h2 className="text-2xl font-[1000] italic uppercase text-white leading-tight">{movieTitle}</h2>
+            <div className="space-y-1">
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-500">Review Box</span>
+              <h2 className="text-xl font-bold text-white leading-tight line-clamp-2">{movieTitle}</h2>
             </div>
 
-            {/* VÙNG CHỌN SAO (ĐÃ ĐƯỢC CHỈNH THÀNH SỐ CHẴN 1,2,3,4,5) */}
-            <div className="flex flex-col items-center gap-2 py-6 bg-white/5 rounded-[2rem] border border-white/5">
-              <div className="flex gap-2">
+            {/* Khu vực chấm sao hình hộp hiện đại */}
+            <div className="flex flex-col items-center gap-3 py-5 bg-zinc-900/30 rounded-xl border border-zinc-800/60">
+              <div className="flex gap-1.5">
                 {[1, 2, 3, 4, 5].map((s) => {
                   const active = hover || rating;
                   const isFilled = active >= s;
                   return (
-                    <div 
+                    <button 
                       key={s} 
-                      className="cursor-pointer transition-transform hover:scale-110 active:scale-90"
+                      type="button"
+                      className="transition-all hover:scale-110 active:scale-95 p-0.5"
                       onMouseEnter={() => setHover(s)} 
                       onMouseLeave={() => setHover(0)} 
                       onClick={() => setRating(s)}
                     >
                       <Star 
-                        size={36} 
-                        fill={isFilled ? "#f59e0b" : "none"} 
-                        className={`transition-all duration-300 ${isFilled ? "text-amber-500 drop-shadow-[0_0_12px_rgba(245,158,11,0.4)]" : "text-zinc-700"}`} 
+                        size={28} 
+                        fill={isFilled ? "#eab308" : "none"} 
+                        className={`transition-all duration-150 ${isFilled ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.3)]" : "text-zinc-700"}`} 
                       />
-                    </div>
+                    </button>
                   );
                 })}
               </div>
-              <span className="text-[10px] font-black text-zinc-500 uppercase mt-1">
-                {rating > 0 ? `${rating} SAO` : hover > 0 ? `${hover} SAO` : "CHƯA CHỌN"}
+              <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                {rating > 0 ? `${rating} SAO` : hover > 0 ? `${hover} SAO` : "CHỌN MỨC ĐỘ"}
               </span>
             </div>
 
-            <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Phim có gì ấn tượng với bạn..."
-              className="w-full h-24 bg-zinc-900 border border-white/5 rounded-[2rem] p-6 text-sm text-white focus:outline-none focus:border-red-600 resize-none italic" />
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase text-zinc-500 tracking-wider">Nội dung bình luận</label>
+              <textarea 
+                value={comment} 
+                onChange={(e) => setComment(e.target.value)} 
+                placeholder="Bộ phim này có gì để lại ấn tượng sâu sắc cho bạn không..."
+                className="w-full h-28 bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600/30 transition-all resize-none custom-scrollbar" 
+              />
+            </div>
 
-            {/* UPLOAD ẢNH */}
-            <div className="flex items-center gap-4">
-              <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
-              <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 text-[10px] font-black uppercase text-zinc-500 hover:text-red-500 bg-white/5 px-4 py-2.5 rounded-xl border border-white/5 transition-all">
-                <ImageIcon size={16} /> {image ? image.name : "Thêm ảnh"}
+            {/* Upload ảnh */}
+            <div className="flex items-center gap-3 bg-zinc-900/20 p-3 rounded-xl border border-zinc-800/40">
+              <input type="file" ref={createFileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
+              <button 
+                type="button"
+                onClick={() => createFileInputRef.current?.click()} 
+                className="flex items-center gap-2 text-[10px] font-bold uppercase text-zinc-400 hover:text-white hover:bg-zinc-800 bg-zinc-900 px-3 py-2 rounded-lg border border-zinc-800 transition-all shrink-0"
+              >
+                <ImageIcon size={14} /> {image ? "Đổi ảnh khác" : "Thêm hình ảnh"}
               </button>
+              
+              {image && (
+                <span className="text-[10px] text-zinc-500 truncate max-w-[150px]">{image.name}</span>
+              )}
+
               {imagePreview && (
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-white/10 shadow-lg">
-                  <img src={imagePreview} className="w-full h-full object-cover" />
-                  <button onClick={() => {setImage(null); setImagePreview(null)}} className="absolute top-0 right-0 bg-black/60 p-0.5"><X size={12}/></button>
+                <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-zinc-700 shadow-md ml-auto shrink-0">
+                  <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
+                  <button 
+                    type="button"
+                    onClick={() => {setImage(null); setImagePreview(null)}} 
+                    className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+                  >
+                    <X size={12} className="text-red-500" />
+                  </button>
                 </div>
               )}
             </div>
 
-            <button onClick={handleSubmit} disabled={isSubmitting}
-              className="w-full py-5 bg-red-600 text-white rounded-[1.5rem] font-black uppercase text-[10px] tracking-[0.2em] hover:bg-white hover:text-black transition-all shadow-xl active:scale-95 disabled:opacity-30">
-              {isSubmitting ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Gửi đánh giá ngay"}
+            <button 
+              onClick={handleSubmit} 
+              disabled={isSubmitting}
+              className="w-full py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold uppercase text-xs tracking-wider transition-all shadow-lg active:scale-[0.98] disabled:opacity-40 flex items-center justify-center"
+            >
+              {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : "Gửi đánh giá ngay"}
             </button>
           </div>
         )}

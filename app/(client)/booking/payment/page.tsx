@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation';
 import { apiRequest, getImageUrl } from '@/app/lib/api'; 
 import toast, { Toaster } from 'react-hot-toast';
 import { 
-  Loader2, ChevronLeft, TicketPercent, Tag, Info, 
-  CreditCard, Wallet, User, MapPin, Calendar, 
-  Clock, Monitor, ShieldCheck, CheckCircle2, Armchair
+  Loader2, ChevronLeft, TicketPercent, Calendar, 
+  Clock, Monitor, ShieldCheck, CheckCircle2, CreditCard, Wallet
 } from 'lucide-react';
 
 export default function PaymentPage() {
@@ -20,7 +19,7 @@ export default function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState("VNPAY");
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
+  useEffect(() => {
     const initPage = async () => {
       const sData = sessionStorage.getItem('booking_data');
       if (!sData) {
@@ -34,8 +33,6 @@ useEffect(() => {
 
       // --- KHỐI CONSOLE LOG DEBUG TOKEN VÀ ROLE ---
       console.log("=== DEBUG MULTI-TAB MULTI-ROLE ===");
-      
-      // 1. Kiểm tra tất cả các token đang có trong hệ thống để xem có bị dẫm chân nhau không
       const tokenUser = typeof window !== "undefined" ? localStorage.getItem('token_user') : null;
       const tokenAdmin = typeof window !== "undefined" ? localStorage.getItem('token_admin') : null;
       const tokenSuperAdmin = typeof window !== "undefined" ? localStorage.getItem('token_super_admin') : null;
@@ -44,7 +41,6 @@ useEffect(() => {
       console.log("Token Admin hiện tại (nếu có):", tokenAdmin);
       console.log("Token SuperAdmin hiện tại (nếu có):", tokenSuperAdmin);
 
-      // 2. Decode thử Token đang dùng xem thực tế bên trong chứa thông tin của ai
       if (tokenUser) {
         try {
           const base64Url = tokenUser.split('.')[1];
@@ -56,15 +52,13 @@ useEffect(() => {
           const decoded = JSON.parse(jsonPayload);
           console.log("👉 Dữ liệu thực tế bên trong tokenUser:", decoded);
           console.log("👉 Role trong token:", decoded.role || decoded.roles || decoded.authorities || "Không tìm thấy");
-          
         } catch (e) {
-          console.error("Không thể decode token, có thể token không đúng định dạng JWT:", e);
+          console.error("Không thể decode token:", e);
         }
       } else {
-        console.warn("⚠️ CẢNH BÁO: Không tìm thấy token_user trong localStorage!");
+        console.warn("⚠️ CẢNH BÁO: Không tìm thấy token_user!");
       }
       console.log("==================================");
-      // --------------------------------------------
 
       try {
         const [userRes, vRes] = await Promise.all([
@@ -74,12 +68,8 @@ useEffect(() => {
 
         if (userRes.ok) {
           const uResult = await userRes.json();
-          console.log("Kết quả trả về từ /users/me:", uResult);
           setUserData(uResult.data?.user || uResult.data || uResult);
-        } else {
-          console.error("API /users/me thất bại, status:", userRes.status);
         }
-
         if (vRes.ok) {
           const vResult = await vRes.json();
           setVouchers(vResult.data || []);
@@ -93,7 +83,6 @@ useEffect(() => {
     initPage();
   }, [router]);
 
-  // TỔNG HỢP LOGIC TÍNH TOÁN TIỀN BẠC
   const calculateTotals = () => {
     const seatPrice = Number(bookingData?.seatPrice) || 0;
     const comboPrice = Number(bookingData?.comboPrice) || 0;
@@ -107,7 +96,6 @@ useEffect(() => {
 
   const { subTotal, discount, finalTotal } = calculateTotals();
 
-  // BỘ LỌC VOUCHER THỎA MÃN ĐIỀU KIỆN
   const validVouchers = vouchers.filter(v => {
     const now = new Date();
     const start = new Date(v.startDate);
@@ -136,48 +124,12 @@ useEffect(() => {
         paymentMethod: paymentMethod, 
         voucherCode: selectedVoucher?.code || "" 
       };
-// --- KHỐI CONSOLE LOG CHI TIẾT ĐƠN HÀNG GỬI ĐI ---
-      console.clear(); // Xóa bớt log cũ cho sạch
-      console.log("%c🎬 === THÔNG TIN CHI TIẾT ĐƠN HÀNG GỬI ĐI ===", "color: #ea580c; font-weight: bold; font-size: 14px;");
-      
-      // 1. Thông tin chung về phim & Khách hàng
-      console.log("🎟️ Phim:", bookingData.movieTitle);
-      console.log("👤 Khách hàng:", userData?.fullName || "Khách hàng", `(${userData?.email || "Chưa có email"})`);
-      console.log("📅 Suất chiếu:", `${bookingData.time} - Ngày ${bookingData.date} | Phòng: ${bookingData.roomName}`);
-      console.log("🏢 Rạp phim:", bookingData.cinemaName);
-      
-      // 2. Chi tiết Vé ghế (In dạng bảng)
-      const seatDetails = bookingData.selectedSeats.map((s: any) => ({
-        "ID Ghế": s.id,
-        "Vị trí": `${s.seatRow}${s.seatNumber}`,
-        "Loại ghế": s.seatType || "Thường"
-      }));
-      console.log("💺 Danh sách ghế đặt:");
-      console.table(seatDetails);
 
-      // 3. Chi tiết đồ ăn nước uống (Combo)
-      if (bookingData.selectedCombos && bookingData.selectedCombos.length > 0) {
-        const comboDetails = bookingData.selectedCombos.map((c: any) => ({
-          "ID Combo": c.id,
-          "Tên Combo": c.name || c.title || "Combo",
-          "Số lượng": c.quantity
-        }));
-        console.log("🍿 Danh sách Combo kèm theo:");
-        console.table(comboDetails);
-      } else {
-        console.log("🍿 Combo: Không chọn đồ ăn/nước uống.");
-      }
-
-      // 4. Chi tiết tiền bạc & Khuyến mãi
+      console.clear();
+      console.log("%c🎬 === THÔNG TIN ĐƠN HÀNG ===", "color: #ea580c; font-weight: bold; font-size: 14px;");
       console.log("💰 Tạm tính:", subTotal.toLocaleString() + "đ");
-      console.log("🎫 Mã giảm giá áp dụng:", selectedVoucher ? `${selectedVoucher.code} (-${discount.toLocaleString()}đ)` : "Không áp dụng");
-      console.log("💳 Phương thức thanh toán:", paymentMethod);
-      console.log("%c🔥 TỔNG TIỀN THỰC TẾ GỬI LÊN SERVER: " + finalTotal.toLocaleString() + "đ", "color: #22c55e; font-weight: bold;");
+      console.log("🔥 TỔNG TIỀN GỬI SERVER: " + finalTotal.toLocaleString() + "đ");
       
-      // 5. In ra object Payload thô (Raw object) gửi lên API
-      console.log("📦 Body Payload gửi API:", payload);
-      console.log("=======================================================");
-      // apiRequest tự động tiêm Token & gán Content-Type: application/json chuẩn xác
       const res = await apiRequest(`/api/v1/orders`, {
         method: 'POST',
         body: JSON.stringify(payload)
@@ -191,7 +143,7 @@ useEffect(() => {
           toast.success("Đang chuyển hướng thanh toán...");
           setTimeout(() => {
             window.location.href = resData.data.paymentUrl;
-          }, 1500);
+          }, 1200);
         } else {
           toast.success("Thanh toán thành công!");
           setTimeout(() => {
@@ -199,8 +151,7 @@ useEffect(() => {
           }, 2000);
         }
       } else {
-        const errorMessage = resData.message || resData.error || "Lỗi đặt vé!";
-        toast.error(errorMessage);
+        toast.error(resData.message || "Lỗi đặt vé!");
       }
     } catch (err) { 
       toast.error("Lỗi kết nối hệ thống!"); 
@@ -210,162 +161,187 @@ useEffect(() => {
   };
 
   if (loading || !bookingData) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
+    <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center">
       <Loader2 className="animate-spin text-red-600" size={40} />
     </div>
   );
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-4 md:p-10 font-sans">
-      <Toaster position="top-center" reverseOrder={false} />
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 p-4 md:p-8 font-sans selection:bg-red-600 selection:text-white">
+      <Toaster position="top-center" />
       
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Nút quay lại */}
-        <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest mb-8">
-          <ChevronLeft size={14}/> Quay lại chọn ghế
+      <div className="max-w-6xl mx-auto">
+        {/* Nút Quay Lại Sáng */}
+        <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-400 hover:text-zinc-700 transition-colors text-[10px] font-black uppercase tracking-widest mb-6">
+          <ChevronLeft size={14}/> Quay lại chọn combo
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* CỘT TRÁI: THÔNG TIN VÉ & VOUCHER */}
-          <div className="lg:col-span-8 space-y-6">
+        {/* Khung Grid Bố Cục Mới (7.5 : 4.5) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          {/* CỘT TRÁI (Bên Nhẹ): Thông Tin & Ưu Đãi */}
+          <div className="lg:col-span-7 space-y-5">
             
-            {/* Thẻ phim chính */}
-            <div className="bg-zinc-900/20 border border-white/5 rounded-[3rem] p-6 md:p-10 flex flex-col md:flex-row gap-8 items-center">
-              <div className="w-32 h-44 rounded-2xl overflow-hidden shadow-2xl border border-white/10 shrink-0">
-                {/* CẬP NHẬT: Bọc qua hàm getImageUrl chuẩn hóa link ảnh từ Cloudinary/Local */}
+            {/* Banner Phim Minimalist Sáng */}
+            <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 flex flex-col sm:flex-row gap-6 items-center shadow-xs">
+              <div className="w-24 h-36 rounded-2xl overflow-hidden shadow-md border border-zinc-100 shrink-0">
                 <img src={getImageUrl(bookingData.movieImage)} alt="Poster" className="w-full h-full object-cover" />
               </div>
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="text-4xl font-[1000] italic uppercase tracking-tighter mb-4 leading-none">
+              <div className="flex-1 text-center sm:text-left space-y-3">
+                <h1 className="text-2xl font-[1000] uppercase italic text-zinc-900 tracking-tight leading-tight">
                   {bookingData.movieTitle}
                 </h1>
-                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[9px] font-black uppercase tracking-widest text-zinc-500">
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full"><Calendar size={12} className="text-red-600"/> {bookingData.date}</div>
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full"><Clock size={12} className="text-red-600"/> {bookingData.time}</div>
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full"><Monitor size={12} className="text-red-600"/> {bookingData.roomName}</div>
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2.5 text-[10px] font-extrabold uppercase text-zinc-500">
+                  <div className="flex items-center gap-1 px-2.5 py-1 bg-zinc-100 rounded-lg"><Calendar size={11} className="text-red-600"/> {bookingData.date}</div>
+                  <div className="flex items-center gap-1 px-2.5 py-1 bg-zinc-100 rounded-lg"><Clock size={11} className="text-red-600"/> {bookingData.time}</div>
+                  <div className="flex items-center gap-1 px-2.5 py-1 bg-zinc-100 rounded-lg"><Monitor size={11} className="text-red-600"/> {bookingData.roomName}</div>
                 </div>
               </div>
             </div>
 
-            {/* Thông tin rạp & Khách hàng */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-zinc-900/20 border border-white/5 p-6 rounded-[2rem]">
-                <p className="text-[9px] font-black text-red-600 uppercase mb-2">Vị trí ghế</p>
-                <div className="flex flex-wrap gap-2">
+            {/* Grid Thông Tin Khách Hàng & Ghế */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white border border-zinc-200/80 p-5 rounded-2xl shadow-xs">
+                <p className="text-[10px] font-black text-red-600 uppercase mb-1.5 tracking-wider">Vị trí ghế ngồi</p>
+                <div className="flex flex-wrap gap-1.5">
                   {bookingData.selectedSeats?.map((s: any) => (
-                    <span key={s.id} className="text-sm font-black text-white">{s.seatRow}{s.seatNumber}</span>
+                    <span key={s.id} className="text-xs font-black bg-zinc-900 text-white px-2 py-0.5 rounded-md">{s.seatRow}{s.seatNumber}</span>
                   ))}
                 </div>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase mt-1">{bookingData.cinemaName}</p>
+                <p className="text-[10px] text-zinc-400 font-bold uppercase mt-2">{bookingData.cinemaName}</p>
               </div>
-              <div className="bg-zinc-900/20 border border-white/5 p-6 rounded-[2rem]">
-                <p className="text-[9px] font-black text-red-600 uppercase mb-2">Người đặt</p>
-                <p className="text-sm font-black uppercase italic">{userData?.fullName || "Khách hàng"}</p>
-                <p className="text-[10px] text-zinc-600 font-bold">{userData?.email}</p>
+              
+              <div className="bg-white border border-zinc-200/80 p-5 rounded-2xl shadow-xs">
+                <p className="text-[10px] font-black text-red-600 uppercase mb-1 tracking-wider">Thông tin người đặt</p>
+                <p className="text-xs font-extrabold text-zinc-900 uppercase truncate">{userData?.fullName || "Khách hàng"}</p>
+                <p className="text-[10px] text-zinc-400 font-medium truncate">{userData?.email}</p>
               </div>
             </div>
 
-            {/* PHẦN VOUCHER */}
-            <div className="bg-zinc-900/20 border border-white/5 p-8 rounded-[2.5rem] space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xs font-black uppercase italic text-red-600 flex items-center gap-2"><TicketPercent size={14}/> Ưu đãi dành cho bạn</h3>
-                <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">{validVouchers.length} mã khả dụng</span>
+            {/* Khối Voucher Thiết Kế Sáng Chuyên Nghiệp */}
+            <div className="bg-white border border-zinc-200/80 p-6 rounded-3xl shadow-xs space-y-4">
+              <div className="flex justify-between items-center border-b border-zinc-100 pb-3">
+                <h3 className="text-xs font-black uppercase text-zinc-900 flex items-center gap-2">
+                  <TicketPercent size={15} className="text-red-600"/> Voucher của bạn
+                </h3>
+                <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-wider">{validVouchers.length} mã sẵn sàng</span>
               </div>
               
               {validVouchers.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {validVouchers.map((v) => {
                     const isSelected = selectedVoucher?.id === v.id;
                     return (
                       <button 
                         key={v.id}
                         onClick={() => setSelectedVoucher(isSelected ? null : v)}
-                        className={`p-5 rounded-[2rem] border text-left transition-all relative overflow-hidden group ${
-                          isSelected ? 'bg-red-600 border-red-600 shadow-xl' : 'bg-black/40 border-white/5 hover:border-white/10'
+                        className={`p-4 rounded-xl border text-left transition-all relative overflow-hidden group ${
+                          isSelected 
+                            ? 'bg-red-50/50 border-red-500 shadow-xs' 
+                            : 'bg-zinc-50/50 border-zinc-200 hover:border-zinc-300'
                         }`}
                       >
-                        <div className="relative z-10 flex justify-between items-start">
-                          <div className="space-y-1">
-                            <span className="text-sm font-[1000] italic uppercase block leading-none">{v.code}</span>
-                            <p className="text-[9px] font-bold text-zinc-500 line-clamp-1">{v.title}</p>
-                            <p className={`text-[8px] font-black uppercase ${isSelected ? 'text-white/60' : 'text-zinc-700'}`}>Hạn: {new Date(v.endDate).toLocaleDateString('vi-VN')}</p>
+                        <div className="relative z-10 flex justify-between items-start gap-2">
+                          <div className="space-y-0.5">
+                            <span className="text-xs font-black uppercase text-zinc-900 block tracking-tight">{v.code}</span>
+                            <p className="text-[10px] font-bold text-zinc-400 line-clamp-1">{v.title}</p>
+                            <p className="text-[9px] font-medium text-zinc-400">Hạn: {new Date(v.endDate).toLocaleDateString('vi-VN')}</p>
                           </div>
-                          <div className={`text-xs font-[1000] italic ${isSelected ? 'text-white' : 'text-red-600'}`}>
+                          <div className="text-xs font-black text-red-600 shrink-0">
                             -{v.discountValue.toLocaleString()}đ
                           </div>
                         </div>
-                        {isSelected && <CheckCircle2 className="absolute -right-2 -bottom-2 text-white/10" size={60} />}
+                        {isSelected && (
+                          <div className="absolute right-2 bottom-2 text-red-600/10">
+                            <CheckCircle2 size={24} strokeWidth={3} />
+                          </div>
+                        )}
                       </button>
                     );
                   })}
                 </div>
               ) : (
-                <div className="py-10 text-center border border-dashed border-white/5 rounded-[2rem] opacity-30">
-                  <p className="text-[10px] font-black uppercase tracking-widest italic">Không có voucher phù hợp</p>
+                <div className="py-6 text-center border border-dashed border-zinc-200 rounded-xl">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400">Bạn chưa có mã ưu đãi phù hợp</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* CỘT PHẢI: HÓA ĐƠN & THANH TOÁN */}
-          <div className="lg:col-span-4">
-            <div className="bg-zinc-950 border border-white/10 rounded-[3rem] p-8 sticky top-10 space-y-8">
-              <h2 className="text-2xl font-[1000] italic uppercase tracking-tighter border-b border-white/5 pb-4">Tóm tắt đơn</h2>
+          {/* CỘT PHẢI (Trọng Tâm): Biên Lai & Nút Xác Nhận */}
+          <div className="lg:col-span-5">
+            <div className="bg-white border border-zinc-200 shadow-sm rounded-3xl p-6 lg:sticky top-6 space-y-6">
+              <h2 className="text-sm font-black uppercase tracking-wider text-zinc-900 border-b border-zinc-100 pb-3">Chi tiết thanh toán</h2>
               
-              <div className="space-y-4">
-                <div className="flex justify-between text-[10px] font-black uppercase text-zinc-500">
-                  <span>Tạm tính</span>
-                  <span className="text-white">{subTotal.toLocaleString()}đ</span>
+              <div className="space-y-3.5">
+                <div className="flex justify-between text-xs font-extrabold text-zinc-500">
+                  <span>Giá vé & Combo</span>
+                  <span className="text-zinc-900 font-black">{subTotal.toLocaleString()}đ</span>
                 </div>
                 
                 {selectedVoucher && (
-                  <div className="flex justify-between text-[10px] font-black uppercase text-green-500 bg-green-500/5 p-3 rounded-xl border border-green-500/10">
-                    <span>Giảm giá ({selectedVoucher.code})</span>
-                    <span>-{discount.toLocaleString()}đ</span>
+                  <div className="flex justify-between text-xs font-extrabold text-emerald-600 bg-emerald-50/60 p-3 rounded-xl border border-emerald-100">
+                    <span>Khuyến mãi ({selectedVoucher.code})</span>
+                    <span className="font-black">-{discount.toLocaleString()}đ</span>
                   </div>
                 )}
 
-                <div className="pt-4 space-y-4">
-                  <p className="text-[9px] font-black uppercase text-zinc-600 text-center tracking-widest">Phương thức thanh toán</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {['VNPAY', 'MOMO'].map(method => (
-                      <button 
-                        key={method}
-                        onClick={() => setPaymentMethod(method)}
-                        className={`flex flex-col items-center gap-2 py-4 rounded-2xl border transition-all ${paymentMethod === method ? 'bg-red-600 border-red-600 text-white' : 'bg-white/5 border-white/5 text-zinc-500'}`}
-                      >
-                        {method === 'VNPAY' ? <Wallet size={16}/> : <CreditCard size={16}/>}
-                        <span className="text-[8px] font-black">{method}</span>
-                      </button>
-                    ))}
+                {/* Khối Cổng Thanh Toán Sáng Sạch */}
+                <div className="pt-3 space-y-3">
+                  <p className="text-[10px] font-black uppercase text-zinc-400 text-center tracking-wider">Chọn phương thức thanh toán</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['VNPAY', 'MOMO'].map(method => {
+                      const isActive = paymentMethod === method;
+                      return (
+                        <button 
+                          key={method}
+                          onClick={() => setPaymentMethod(method)}
+                          className={`flex items-center justify-center gap-2 py-3.5 rounded-xl border font-bold text-xs transition-all ${
+                            isActive 
+                              ? 'bg-zinc-900 border-zinc-900 text-white shadow-sm' 
+                              : 'bg-zinc-50 border-zinc-200 text-zinc-500 hover:bg-zinc-100/70'
+                          }`}
+                        >
+                          {method === 'VNPAY' ? <Wallet size={15}/> : <CreditCard size={15}/>}
+                          <span>{method}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="pt-8 flex justify-between items-end">
-                  <span className="text-[10px] font-black uppercase text-zinc-500 mb-1">Tổng thanh toán:</span>
-                  <span className="text-4xl font-[1000] italic text-red-600 tracking-tighter leading-none">{finalTotal.toLocaleString()}đ</span>
+                {/* Tổng Tiền Chốt */}
+                <div className="pt-5 border-t border-zinc-100 flex justify-between items-end">
+                  <span className="text-xs font-black uppercase text-zinc-400 mb-0.5">Số tiền cần trả:</span>
+                  <span className="text-3xl font-[1000] italic text-red-600 tracking-tight leading-none">
+                    {finalTotal.toLocaleString()}đ
+                  </span>
                 </div>
               </div>
 
+              {/* Nút Đặt Vé Chính */}
               <button 
                 onClick={handleFinalCheckout}
                 disabled={isProcessing}
-                className="w-full py-6 bg-red-600 rounded-[2rem] font-[1000] italic uppercase tracking-[0.2em] hover:bg-red-700 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                className="w-full py-4 bg-red-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-red-700 shadow-[0_4px_20px_rgba(220,38,38,0.18)] active:scale-98 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {isProcessing ? <Loader2 className="animate-spin" /> : <><ShieldCheck size={20}/> Xác nhận ngay</>}
+                {isProcessing ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <>
+                    <ShieldCheck size={16}/> 
+                    Xác nhận &amp; Thanh toán
+                  </>
+                )}
               </button>
               
-              <p className="text-[8px] text-center text-zinc-600 font-bold uppercase tracking-tighter">
-                Bằng việc xác nhận, bạn đồng ý với các điều khoản của A&K Cinema
+              <p className="text-[9px] text-center text-zinc-400 font-semibold uppercase leading-normal px-2">
+                Vé đã mua không thể đổi trả. Bạn đồng ý với quy định đặt vé của chúng tôi.
               </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Hiệu ứng nền Blur */}
-      <div className="fixed inset-0 pointer-events-none opacity-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-600/20 blur-[150px] rounded-full" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-red-900/10 blur-[100px] rounded-full" />
+        </div>
       </div>
     </div>
   );

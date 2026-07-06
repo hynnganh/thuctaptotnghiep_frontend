@@ -137,7 +137,7 @@ export default function AdminShowtimePage() {
               <h1 className="text-2xl font-[1000] text-white tracking-tighter uppercase italic leading-none">
                 Lịch chiếu <span className="text-red-600">{cinemaName || "Chi nhánh"}</span>
               </h1>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">A&K Cinema Management</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">HNA Cinema Management</p>
             </div>
           </div>
           <div className="flex items-center gap-3 w-full md:w-auto text-sm">

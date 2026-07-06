@@ -11,7 +11,7 @@ interface MovieCardProps {
   rating?: number | string | null; 
   reviewCount?: number;            
   ageRating?: string;
-  genreNames?: string[]; // 🎯 THÊM MỚI: Nhận mảng nhiều thể loại
+  genreNames?: string[]; 
   status?: string;
 }
 
@@ -22,7 +22,7 @@ export default function MovieCard({
   rating,
   reviewCount = 0,
   ageRating = "P",
-  genreNames = [], // 🎯 THÊM MỚI: Giá trị mặc định
+  genreNames = [], 
   status
 }: MovieCardProps) {
 
@@ -58,30 +58,30 @@ export default function MovieCard({
   };
 
   return (
-    <div className="group relative flex flex-col bg-[#0a0a0a] rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-700 hover:shadow-red-600/10 hover:-translate-y-4 border border-white/5">
+    <div className="group relative flex flex-col h-full bg-white rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-700 hover:shadow-[0_20px_40px_rgba(220,38,38,0.08)] hover:-translate-y-3 border border-slate-200/60">
 
-      {/* IMAGE */}
-      <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-900">
+      {/* IMAGE CONTAINER - Khóa cứng tỷ lệ 2:3 */}
+      <div className="relative aspect-[2/3] w-full overflow-hidden bg-slate-100">
         <img
           src={finalImageUrl}
           alt={title}
-          className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 ${!isShowing && 'grayscale-[0.3] group-hover:grayscale-0'}`}
+          className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${!isShowing && 'grayscale-[0.2] group-hover:grayscale-0'}`}
           onError={handleImageError}
           loading="lazy"
         />
 
-        {/* GRADIENT */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-90" />
+        {/* GRADIENT ĐỔ BÓNG MỜ MỊN MÀNG */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-80" />
 
-        {/* 🎯 ĐỘ TUỔI */}
-        <div className={`absolute top-4 right-4 z-20 px-3 py-1.5 rounded-xl backdrop-blur-md border font-black text-[11px] tracking-widest uppercase shadow-lg ${ageRating === "T18" ? "bg-red-600/80 border-red-400/30 text-white" : "bg-blue-600/80 border-blue-400/30 text-white"}`}>
+        {/* 🎯 ĐỘ TUỔI (Đỏ nhãn T18 / Đen nhãn thường) */}
+        <div className={`absolute top-4 right-4 z-20 px-3 py-1.5 rounded-xl backdrop-blur-md border font-black text-[11px] tracking-widest uppercase shadow-sm transition-transform duration-500 group-hover:scale-95 ${ageRating === "T18" ? "bg-red-600/90 border-red-400/20 text-white" : "bg-slate-900/90 border-slate-700/20 text-white"}`}>
           {ageRating}
         </div>
 
-        {/* HOVER BUTTONS */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-6 group-hover:translate-y-0 z-30 px-6 gap-3">
+        {/* HOVER BUTTONS - Tone Đỏ Đen cao cấp */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-30 px-6 gap-3">
           <Link href={`/movies/${id}`} className="w-full">
-            <button className={`w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-2xl transition-all active:scale-95 ${isShowing ? 'bg-red-600 text-white hover:bg-white hover:text-black' : 'bg-white text-black hover:bg-blue-600 hover:text-white'}`}>
+            <button className={`w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg transition-all active:scale-95 ${isShowing ? 'bg-red-600 text-white hover:bg-slate-900 hover:text-white' : 'bg-slate-900 text-white hover:bg-red-600 hover:text-white'}`}>
               {isShowing ? (
                 <>
                   <Ticket size={18} fill="currentColor" /> Mua Vé Ngay
@@ -95,49 +95,51 @@ export default function MovieCard({
           </Link>
 
           <Link href={`/movies/${id}`} className="w-full">
-            <button className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-white/20 transition-all">
+            <button className="w-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-50 hover:text-red-600 transition-all shadow-sm">
               <Info size={16} /> Chi Tiết
             </button>
           </Link>
         </div>
       </div>
 
-      {/* INFO */}
-      <div className="p-6 relative flex-grow flex flex-col justify-between">
+      {/* INFO BLOCK - Khóa layout chống lệch dòng */}
+      <div className="p-6 relative flex-grow flex flex-col justify-between bg-white">
         <div>
-          {/* ⭐ ĐÁNH GIÁ */}
-          <div className="flex items-center gap-2 mb-3 min-h-[24px]">
+          {/* ⭐ ĐÁNH GIÁ (Giữ màu cam amber chuẩn điện ảnh) */}
+          <div className="flex items-center gap-2 mb-2 min-h-[24px]">
             {hasRating ? (
               <>
-                <Star size={18} className="fill-orange-500 text-orange-500" />
-                <span className="text-white font-bold text-[15px]">{displayRating}</span>
+                <Star size={16} className="fill-amber-500 text-amber-500" />
+                <span className="text-slate-900 font-extrabold text-[14px]">{displayRating}</span>
                 {reviewCount > 0 && (
-                  <span className="text-zinc-400 text-[14px]">({formatReviewCount(reviewCount)} đánh giá)</span>
+                  <span className="text-slate-400 text-[13px] font-medium">({formatReviewCount(reviewCount)} đánh giá)</span>
                 )}
               </>
             ) : (
-              <span className="text-zinc-500 text-[14px] font-medium">Chưa có đánh giá</span>
+              <span className="text-slate-400 text-[13px] font-medium italic">Chưa có đánh giá</span>
             )}
           </div>
 
-          {/* TITLE */}
-          <h3 className="font-black text-white text-[18px] md:text-[20px] line-clamp-2 group-hover:text-red-500 transition-colors duration-300 tracking-tighter leading-tight mb-3 cursor-pointer">
+          {/* TITLE - Khóa cứng chiều cao bằng 2 dòng văn bản (3.5rem) tránh lệch layout */}
+          <h3 className="font-black text-slate-900 text-[17px] md:text-[18px] h-[3.5rem] line-clamp-2 group-hover:text-red-600 transition-colors duration-300 tracking-tight leading-snug mb-2 cursor-pointer">
             {title}
           </h3>
 
           {/* META THỂ LOẠI */}
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-zinc-500 text-[10px] uppercase font-black tracking-widest flex items-center gap-2 line-clamp-1">
-              {!isShowing && <CalendarDays size={12} className="text-blue-500" />}
-              
-              {/* 🎯 FIX: Hiển thị mảng thể loại */}
-              {genreNames?.length > 0 ? genreNames.join(" • ") : "Đang cập nhật"}
+          <div className="flex items-center justify-between mb-4 min-h-[20px]">
+            <span className="text-slate-400 text-[10px] uppercase font-black tracking-widest flex items-center gap-1.5 line-clamp-1 w-full">
+              {!isShowing && <CalendarDays size={12} className="text-red-500 shrink-0" />}
+              <span className="truncate">
+                {genreNames?.length > 0 ? genreNames.join(" • ") : "Đang cập nhật"}
+              </span>
             </span>
           </div>
         </div>
 
-        {/* LINE */}
-        <div className={`h-[2px] w-0 transition-all duration-700 group-hover:w-full ${isShowing ? 'bg-red-600' : 'bg-blue-600'}`} />
+        {/* LINE ĐÁY CARD - Hoạt họa co giãn khi hover */}
+        <div className="w-full bg-slate-100 h-[2px] rounded-full overflow-hidden mt-auto">
+          <div className={`h-full w-0 transition-all duration-700 group-hover:w-full ${isShowing ? 'bg-red-600' : 'bg-slate-900'}`} />
+        </div>
       </div>
     </div>
   );

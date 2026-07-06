@@ -67,32 +67,34 @@ export default function LiveSearchBar() {
       
       {/* 🚀 ĐỘ GIÃN BÊN TRÁI ĐƯỢC TÍNH TOÁN LẠI KHỚP VỚI "VÙNG AN TOÀN" BÊN NAVBAR */}
       <div className="absolute right-0 top-0 group/search w-[140px] focus-within:w-[190px] md:w-[160px] md:focus-within:w-[210px] lg:w-[180px] lg:focus-within:w-[230px] xl:w-[220px] xl:focus-within:w-[280px] transition-all duration-500 ease-out z-10">
-        <div className="relative flex items-center w-full h-9 md:h-10 rounded-full bg-gradient-to-b from-zinc-900 to-black border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8),_0_2px_10px_rgba(0,0,0,0.4)] focus-within:border-red-600/50 focus-within:shadow-[0_0_20px_rgba(220,38,38,0.2),_inset_0_2px_10px_rgba(0,0,0,0.8)] transition-all duration-500 px-3 md:px-4">
+        {/* ĐỔI NỀN SANG LIGHT MODE: bg-zinc-100/80 chuyển thành bg-white khi focus, đổi bóng và màu border mịn hơn */}
+        <div className="relative flex items-center w-full h-9 md:h-10 rounded-full bg-zinc-100/80 border border-zinc-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] focus-within:bg-white focus-within:border-red-600/60 focus-within:shadow-[0_4px_20px_rgba(220,38,38,0.08)] transition-all duration-500 px-3 md:px-4">
           
-          <Search className="w-3.5 h-3.5 md:w-4 md:h-4 text-zinc-500 group-focus-within/search:text-red-500 transition-colors duration-300 shrink-0" />
+          <Search className="w-3.5 h-3.5 md:w-4 md:h-4 text-zinc-400 group-focus-within/search:text-red-500 transition-colors duration-300 shrink-0" />
           
+          {/* Đổi màu text thành text-zinc-800 và placeholder thành text-zinc-400 để dễ nhìn trên nền sáng */}
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => { if (results.length > 0) setIsOpen(true); }}
             placeholder="Tìm phim..."
-            className="w-full bg-transparent text-[11px] md:text-[13px] text-white placeholder-zinc-600 border-none outline-none focus:outline-none focus:ring-0 ml-1.5 md:ml-2 tracking-wide font-medium"
+            className="w-full bg-transparent text-[11px] md:text-[13px] text-zinc-800 placeholder-zinc-400 border-none outline-none focus:outline-none focus:ring-0 ml-1.5 md:ml-2 tracking-wide font-bold"
           />
           
           {isLoading ? (
             <Loader2 className="w-3 h-3 md:w-3.5 md:h-3.5 animate-spin text-red-500 shrink-0" />
           ) : searchTerm ? (
-            <button onClick={() => setSearchTerm("")} className="text-zinc-500 hover:text-white shrink-0 transition-colors">
+            <button onClick={() => setSearchTerm("")} className="text-zinc-400 hover:text-zinc-600 shrink-0 transition-colors">
               <X className="w-3 h-3 md:w-3.5 md:h-3.5" />
             </button>
           ) : null}
         </div>
       </div>
 
-      {/* 🎬 KHUNG DROPDOWN KẾT QUẢ - ĐỒNG BỘ SIZE VỚI TRẠNG THÁI FOCUS */}
+      {/* 🎬 KHUNG DROPDOWN KẾT QUẢ TÔNG SÁNG - ĐỒNG BỘ SIZE VỚI TRẠNG THÁI FOCUS */}
       {isOpen && results.length > 0 && (
-        <div className="absolute top-[calc(100%+10px)] right-0 w-[190px] md:w-[210px] lg:w-[230px] xl:w-[280px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden z-50 py-1.5 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="absolute top-[calc(100%+10px)] right-0 w-[190px] md:w-[210px] lg:w-[230px] xl:w-[280px] bg-white border border-zinc-200/60 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden z-50 py-1.5 animate-in fade-in slide-in-from-top-4 duration-300">
           {results.map((movie) => {
             const releaseYear = movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "2026";
             const displayGenres = movie.genreNames?.length > 0 ? movie.genreNames.join(", ") : "Đang cập nhật";
@@ -101,10 +103,10 @@ export default function LiveSearchBar() {
               <div 
                 key={movie.id} 
                 onClick={() => handleSelectMovie(movie.id)}
-                className="flex gap-2.5 md:gap-3 p-2 hover:bg-white/5 cursor-pointer transition-colors items-center group/item"
+                className="flex gap-2.5 md:gap-3 p-2 hover:bg-zinc-50 cursor-pointer transition-colors items-center group/item"
               >
                 {/* Ảnh Phim */}
-                <div className="w-9 h-12 md:w-11 md:h-14 shrink-0 rounded-lg overflow-hidden bg-zinc-800 border border-white/5 group-hover/item:border-red-500/50 transition-colors">
+                <div className="w-9 h-12 md:w-11 md:h-14 shrink-0 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200/60 group-hover/item:border-red-500/50 transition-colors">
                   <img 
                     src={getImageUrl(movie.posterUrl)} 
                     alt={movie.title} 
@@ -114,16 +116,17 @@ export default function LiveSearchBar() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-[11px] md:text-[13px] font-bold text-white truncate leading-tight mb-0.5 group-hover/item:text-red-500 transition-colors">
+                  {/* Chuyển sang text-zinc-800 để hiển thị rõ nét trên nền trắng */}
+                  <h4 className="text-[11px] md:text-[13px] font-bold text-zinc-800 truncate leading-tight mb-0.5 group-hover/item:text-red-500 transition-colors">
                     {movie.title}
                   </h4>
                   <p className="text-[8px] md:text-[9px] text-zinc-400 truncate mb-1">
                     {movie.director || "The Movie"}
                   </p>
                   
-                  <div className="flex items-center gap-1.5 md:gap-2 text-[8px] md:text-[9px] text-zinc-500 font-medium">
-                    <span>{releaseYear}</span>
-                    <span className="px-1 py-0.5 bg-[#d4a373]/20 text-[#d4a373] border border-[#d4a373]/20 rounded text-[7px] font-black uppercase shrink-0">
+                  <div className="flex items-center gap-1.5 md:gap-2 text-[8px] md:text-[9px] text-zinc-400 font-medium">
+                    <span className="text-zinc-500">{releaseYear}</span>
+                    <span className="px-1 py-0.5 bg-[#d4a373]/10 text-[#b58255] border border-[#d4a373]/30 rounded text-[7px] font-black uppercase shrink-0">
                       {movie.ageRating || "P"}
                     </span>
                     <span className="truncate max-w-[60px] sm:max-w-[80px] md:max-w-[100px] text-zinc-400 hidden sm:inline-block">{displayGenres}</span>
@@ -135,10 +138,10 @@ export default function LiveSearchBar() {
         </div>
       )}
 
-      {/* Khi không tìm thấy */}
+      {/* Khi không tìm thấy (Tông sáng) */}
       {isOpen && results.length === 0 && searchTerm && !isLoading && (
-        <div className="absolute top-[calc(100%+10px)] right-0 w-[190px] md:w-[210px] lg:w-[230px] xl:w-[280px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-50 p-4 md:p-5 text-center animate-in fade-in slide-in-from-top-4 duration-300">
-          <p className="text-[11px] md:text-xs text-zinc-500 font-medium">Không tìm thấy "{searchTerm}"</p>
+        <div className="absolute top-[calc(100%+10px)] right-0 w-[190px] md:w-[210px] lg:w-[230px] xl:w-[280px] bg-white border border-zinc-200/60 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] z-50 p-4 md:p-5 text-center animate-in fade-in slide-in-from-top-4 duration-300">
+          <p className="text-[11px] md:text-xs text-zinc-400 font-bold">Không tìm thấy "{searchTerm}"</p>
         </div>
       )}
     </div>

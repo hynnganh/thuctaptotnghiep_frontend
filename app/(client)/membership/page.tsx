@@ -201,354 +201,163 @@ export default function MembershipPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white overflow-hidden relative">
-      {/* BG */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-350px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full bg-red-600/10 blur-[180px]" />
-        <div className="absolute bottom-[-300px] right-[-150px] w-[800px] h-[800px] rounded-full bg-red-500/10 blur-[180px]" />
-      </div>
-
-      {/* HERO */}
-      <section className="relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* LEFT */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-red-500/20 bg-red-500/10 text-red-500 text-[11px] font-black uppercase tracking-[0.3em]">
-                <Sparkles size={13} />
-                A&K Rewards
-              </div>
-
-              <h1 className="mt-8 text-5xl md:text-7xl font-black uppercase italic leading-[0.9] tracking-tight">
-                Membership
-              </h1>
-
-              <p className="mt-6 text-zinc-400 text-sm md:text-base leading-relaxed max-w-xl">
-                Hệ thống tích điểm thành viên của
-                A&K Cinema.
-              </p>
-
-              {/* ACTION */}
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Link
-                  href="/movies"
-                  className="group px-8 h-14 rounded-2xl bg-red-600 hover:bg-red-500 transition-all duration-300 font-black uppercase text-sm tracking-widest flex items-center gap-2 shadow-2xl shadow-red-600/20 hover:scale-[1.03]"
-                >
-                  Đặt vé ngay
-
-                  <ChevronRight
-                    size={16}
-                    className="group-hover:translate-x-1 transition-transform"
-                  />
-                </Link>
-
-                <Link
-                  href="/discounts"
-                  className="px-8 h-14 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 font-bold uppercase text-sm tracking-wider flex items-center"
-                >
-                  Kho voucher
-                </Link>
-              </div>
-
-              {/* FEATURES */}
-              <div className="grid grid-cols-3 gap-4 mt-12">
-                {[
-                  {
-                    icon: Coins,
-                    title: "+1 điểm",
-                    sub: "10.000 VNĐ",
-                  },
-                  {
-                    icon: Gift,
-                    title: "Voucher",
-                    sub: "Đổi điểm",
-                  },
-                  {
-                    icon: WalletCards,
-                    title: "Reward",
-                    sub: "Cinema",
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl border border-white/5 bg-white/[0.03] p-5 backdrop-blur-xl"
-                  >
-                    <item.icon
-                      size={22}
-                      className="text-red-500"
-                    />
-
-                    <h4 className="mt-4 font-black">
-                      {item.title}
-                    </h4>
-
-                    <p className="text-zinc-500 text-xs mt-1">
-                      {item.sub}
-                    </p>
-                  </div>
-                ))}
-              </div>
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 antialiased selection:bg-red-50">
+      
+      {/* MAIN CONTAINER */}
+      <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        
+        {/* HERO SECTION - COMPACT LAYOUT */}
+        <section className="grid md:grid-cols-12 gap-6 items-center bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-sm">
+          {/* LEFT: TEXT & ACTION */}
+          <div className="md:col-span-7 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-wider">
+              <Sparkles size={11} />
+              HNA Rewards
             </div>
 
-            {/* RIGHT */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[420px] overflow-hidden rounded-[2.7rem] border border-white/10 bg-white/[0.05] backdrop-blur-2xl p-7">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500 font-black">
-                      Member Card
-                    </p>
+            <h1 className="text-3xl font-black uppercase tracking-tight text-zinc-900">
+              Membership
+            </h1>
 
-                    <h2 className="mt-3 text-2xl font-black italic leading-tight">
-                      {fullName || "A&K MEMBER"}
-                    </h2>
+            <p className="text-zinc-500 text-xs md:text-sm max-w-md leading-relaxed">
+              Hệ thống tích điểm thành viên chính thức của HNA Cinema. Tích lũy điểm thưởng qua mỗi lần mua vé và đổi lấy các phần quà, voucher ưu đãi đặc quyền.
+            </p>
 
-                    <p className="text-zinc-500 text-xs mt-2">
-                      Cinema Rewards System
-                    </p>
-                  </div>
-
-                  <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center">
-                    <Gift size={28} />
-                  </div>
-                </div>
-
-                {/* POINT */}
-                <div className="mt-10">
-                  <p className="text-zinc-500 text-xs uppercase tracking-widest">
-                    Reward Points
-                  </p>
-
-                  <h1 className="text-6xl font-black leading-none mt-2">
-                    {points.toLocaleString()}
-                  </h1>
-
-                  <p className="mt-4 text-sm text-zinc-400">
-                    Điểm hiện có trong tài khoản.
-                  </p>
-                </div>
-
-                {/* MINI */}
-                <div className="mt-8 grid grid-cols-2 gap-4">
-                  <div className="rounded-2xl border border-white/5 bg-black/30 p-5">
-                    <Coins
-                      size={20}
-                      className="text-red-500"
-                    />
-
-                    <p className="mt-3 text-zinc-500 text-[10px] uppercase tracking-widest">
-                      Tích điểm
-                    </p>
-
-                    <h4 className="mt-1 text-xl font-black">
-                      +1 / 10K
-                    </h4>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/5 bg-black/30 p-5">
-                    <Gift
-                      size={20}
-                      className="text-red-500"
-                    />
-
-                    <p className="mt-3 text-zinc-500 text-[10px] uppercase tracking-widest">
-                      Voucher
-                    </p>
-
-                    <h4 className="mt-1 text-xl font-black">
-                      Redeem
-                    </h4>
-                  </div>
-                </div>
-
-                {/* NOTICE */}
-                <div className="mt-6 rounded-2xl border border-white/5 bg-black/30 p-5">
-                  <div className="flex items-center gap-3">
-                    <Clock3
-                      className="text-red-500"
-                      size={18}
-                    />
-
-                    <div>
-                      <p className="font-bold text-sm">
-                        Điểm thưởng
-                      </p>
-
-                      <p className="text-zinc-500 text-xs mt-1">
-                        Điểm được cộng tự động sau
-                        mỗi lần thanh toán.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* BLOCKS */}
-          <div className="grid md:grid-cols-3 gap-6 mt-24">
-            {[
-              {
-                icon: Ticket,
-                title: "Đặt Vé",
-                desc: "Đặt vé nhanh chóng.",
-              },
-              {
-                icon: Coins,
-                title: "Tích Điểm",
-                desc: "Điểm cộng trực tiếp.",
-              },
-              {
-                icon: WalletCards,
-                title: "Đổi Voucher",
-                desc: "Voucher redeem từ backend.",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-8"
+            <div className="flex flex-wrap gap-2.5 pt-1">
+              <Link
+                href="/movies"
+                className="group px-4 h-9 rounded-xl bg-red-600 hover:bg-red-500 transition-all text-white font-bold uppercase text-[11px] tracking-wider flex items-center gap-1 shadow-sm"
               >
-                <div className="w-14 h-14 rounded-2xl bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-500">
-                  <item.icon size={28} />
+                Đặt vé ngay
+                <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <Link
+                href="/discounts"
+                className="px-4 h-9 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 transition-all text-zinc-700 font-bold uppercase text-[11px] tracking-wider flex items-center"
+              >
+                Kho voucher
+              </Link>
+            </div>
+          </div>
+
+          {/* RIGHT: COMPACT MEMBER CARD */}
+          <div className="md:col-span-5 flex justify-center md:justify-end">
+            <div className="w-full max-w-[320px] rounded-2xl border border-zinc-200/50 bg-gradient-to-br from-zinc-900 to-zinc-800 p-5 text-white shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-red-600/10 rounded-full blur-xl" />
+              
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold">Member Card</p>
+                  <h2 className="mt-1 text-base font-black tracking-wide truncate max-w-[170px]">
+                    {fullName || "HNA MEMBER"}
+                  </h2>
                 </div>
-
-                <h3 className="mt-6 text-2xl font-black uppercase italic">
-                  {item.title}
-                </h3>
-
-                <p className="mt-4 text-zinc-500 text-sm leading-relaxed">
-                  {item.desc}
-                </p>
+                <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                  <Gift size={16} className="text-red-400" />
+                </div>
               </div>
-            ))}
+
+              <div className="mt-6 flex items-end justify-between">
+                <div>
+                  <p className="text-[9px] uppercase tracking-widest text-zinc-400">Reward Points</p>
+                  <h3 className="text-2xl font-black tracking-tight mt-0.5 text-red-400">
+                    {points.toLocaleString()}
+                  </h3>
+                </div>
+                <div className="text-right text-[10px] text-zinc-400 space-y-0.5">
+                  <p className="font-bold text-white">10.000đ = 1đ</p>
+                  <p>Tự động tích điểm</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* VOUCHERS */}
-      <section className="max-w-7xl mx-auto px-6 py-20 relative z-10">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <p className="text-red-500 uppercase tracking-[0.3em] text-xs font-black">
-              Voucher đổi điểm
-            </p>
-
-            <h2 className="mt-4 text-4xl md:text-5xl font-black uppercase italic">
-              Kho Voucher
-            </h2>
+        {/* VOUCHERS SECTION */}
+        <section className="space-y-4">
+          {/* SECTION HEADER */}
+          <div className="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+            <div>
+              <p className="text-red-600 uppercase tracking-wider text-[10px] font-bold">Voucher đổi điểm</p>
+              <h2 className="text-lg font-bold text-zinc-900">Kho Voucher Hiện Có</h2>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white shadow-sm">
+              <Coins className="text-amber-500" size={13} />
+              <span className="text-xs font-bold text-zinc-700">{points.toLocaleString()} điểm</span>
+            </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-3 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.03]">
-            <Coins
-              className="text-red-500"
-              size={18}
-            />
+          {/* LOADING / EMPTY / GRID */}
+          {loading ? (
+            <div className="py-20 flex justify-center">
+              <div className="w-9 h-9 border-2 border-red-500/20 border-t-red-600 rounded-full animate-spin" />
+            </div>
+          ) : vouchers.length === 0 ? (
+            <div className="py-16 text-center bg-white border border-zinc-200 rounded-2xl">
+              <Gift size={36} className="mx-auto text-zinc-300" />
+              <h3 className="mt-2 text-sm font-bold text-zinc-700">Chưa có voucher</h3>
+              <p className="text-zinc-400 text-xs mt-0.5">Hiện chưa có voucher redeem khả dụng.</p>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {vouchers.map((voucher) => {
+                const canRedeem = points >= voucher.costPoints;
 
-            <span className="text-sm font-bold text-zinc-300">
-              {points.toLocaleString()} điểm
-            </span>
-          </div>
-        </div>
+                const alreadyOwned = myVouchers.some(
+                  (myVoucher) =>
+                    myVoucher.id === voucher.id ||
+                    myVoucher.code === voucher.code
+                );
 
-        {/* LOADING */}
-        {loading ? (
-          <div className="py-32 flex justify-center">
-            <div className="w-16 h-16 border-[3px] border-red-500/20 border-t-red-500 rounded-full animate-spin" />
-          </div>
-        ) : vouchers.length === 0 ? (
-          <div className="py-32 text-center">
-            <Gift
-              size={60}
-              className="mx-auto text-zinc-700"
-            />
-
-            <h3 className="mt-5 text-2xl font-black">
-              Chưa có voucher
-            </h3>
-
-            <p className="text-zinc-500 mt-3">
-              Hiện chưa có voucher redeem.
-            </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {vouchers.map((voucher) => {
-              const canRedeem = points >= voucher.costPoints;
-
-              // check đã đổi
-              const alreadyOwned = myVouchers.some(
-                (myVoucher) =>
-                  myVoucher.id === voucher.id ||
-                  myVoucher.code === voucher.code
-              );
-
-              return (
-                <div
-                  key={voucher.id}
-                  className="group relative overflow-hidden rounded-[2rem] border border-white/5 bg-gradient-to-b from-white/[0.05] to-white/[0.02] hover:border-red-500/20 transition-all duration-300"
-                >
-                  <div className="relative p-6">
-                    {/* HEADER */}
-                    <div className="flex items-start justify-between">
-                      <div className="w-14 h-14 rounded-2xl bg-red-600 flex items-center justify-center">
-                        <Gift size={26} />
-                      </div>
-
-                      <div className="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest">
-                        Redeem
-                      </div>
-                    </div>
-
-                    {/* CONTENT */}
-                    <div className="mt-6">
-                      <h3 className="text-xl font-black leading-tight line-clamp-2 min-h-[56px]">
-                        {voucher.title}
-                      </h3>
-
-                      {/* DESCRIPTION GỌN */}
-                      <p className="mt-2 text-zinc-500 text-xs leading-relaxed line-clamp-2 min-h-[36px]">
-                        {voucher.description}
-                      </p>
-                    </div>
-
-                    {/* INFO */}
-                    <div className="mt-6 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-zinc-500 text-xs">
-                          Giảm giá
-                        </span>
-                        <span className="text-red-500 font-black">
-                          {Number(voucher.discountValue).toLocaleString()}đ
+                return (
+                  <div
+                    key={voucher.id}
+                    className="group bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between hover:border-red-200 transition-all hover:shadow-sm"
+                  >
+                    <div>
+                      {/* CARD HEADER */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
+                          <Gift size={15} className="text-red-600" />
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[9px] font-medium">
+                          Cần: {voucher.costPoints} điểm
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-zinc-500 text-xs">
-                          Đổi điểm
-                        </span>
-                        <span className="font-black text-white text-sm">
-                          {voucher.costPoints} điểm
-                        </span>
+                      {/* CARD CONTENT */}
+                      <div className="mt-3 space-y-1">
+                        <h3 className="text-xs font-bold text-zinc-900 line-clamp-1 group-hover:text-red-600 transition-colors">
+                          {voucher.title}
+                        </h3>
+                        <p className="text-zinc-400 text-[11px] line-clamp-2 min-h-[32px] leading-relaxed">
+                          {voucher.description}
+                        </p>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-zinc-500 text-xs">
-                          Đơn tối thiểu
-                        </span>
-                        <span className="font-bold text-zinc-300 text-xs">
-                          {Number(voucher.minOrderAmount).toLocaleString()}đ
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-zinc-500 text-xs">
-                          HSD
-                        </span>
-                        <span className="font-bold text-zinc-300 text-xs">
-                          {voucher.endDate
-                            ? new Date(voucher.endDate).toLocaleDateString("vi-VN")
-                            : "Không giới hạn"}
-                        </span>
+                      {/* DETAILS LIST */}
+                      <div className="mt-3 pt-2 border-t border-zinc-100 space-y-1.5 text-[11px]">
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400">Giảm giá</span>
+                          <span className="font-bold text-red-600">
+                            {Number(voucher.discountValue).toLocaleString()}đ
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400">Đơn tối thiểu</span>
+                          <span className="font-medium text-zinc-700">
+                            {Number(voucher.minOrderAmount).toLocaleString()}đ
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400">Hạn sử dụng</span>
+                          <span className="font-medium text-zinc-500">
+                            {voucher.endDate
+                              ? new Date(voucher.endDate).toLocaleDateString("vi-VN")
+                              : "Không giới hạn"}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -556,12 +365,12 @@ export default function MembershipPage() {
                     <button
                       onClick={() => redeemVoucher(voucher)}
                       disabled={!canRedeem || alreadyOwned}
-                      className={`mt-6 w-full h-12 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-300 ${
+                      className={`mt-4 w-full h-8.5 rounded-lg font-bold uppercase text-[10px] tracking-wider transition-all ${
                         alreadyOwned
-                          ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                          ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
                           : canRedeem
-                          ? "bg-red-600 hover:bg-red-500"
-                          : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                          ? "bg-red-600 hover:bg-red-500 text-white shadow-sm"
+                          : "bg-zinc-100 text-zinc-400 cursor-not-allowed"
                       }`}
                     >
                       {alreadyOwned
@@ -571,107 +380,65 @@ export default function MembershipPage() {
                         : "Không đủ điểm"}
                     </button>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* RULES */}
-      <section className="max-w-5xl mx-auto px-6 pb-24 relative z-10">
-        <div className="rounded-[2.5rem] border border-red-500/10 bg-gradient-to-br from-red-600/10 to-transparent p-10">
-          <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center shrink-0">
-              <Coins size={28} />
+                );
+              })}
             </div>
+          )}
+        </section>
 
+        {/* RULES BANNER - ULTRA COMPACT */}
+        <section className="bg-zinc-900 text-white rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-red-600 flex items-center justify-center shrink-0">
+              <Clock3 size={14} />
+            </div>
             <div>
-              <h3 className="text-3xl font-black uppercase italic">
-                Quy tắc tích điểm
-              </h3>
-
-              <div className="mt-6 grid md:grid-cols-2 gap-5">
-                {[
-                  "Mỗi 10.000 VNĐ = 1 điểm thưởng.",
-                  "Điểm cộng tự động từ hệ thống.",
-                  "Voucher redeem bằng điểm thật.",
-                  "Không thể đổi điểm thành tiền.",
-                  "Voucher có hạn sử dụng riêng.",
-                  "Điểm dùng để đổi ưu đãi hấp dẫn.",
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3 text-sm text-zinc-300"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className="text-red-500 mt-0.5 shrink-0"
-                    />
-
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
+              <h4 className="text-[11px] font-bold uppercase tracking-wider text-red-400">Quy tắc tích điểm</h4>
+              <p className="text-[10px] text-zinc-400">Hệ thống xử lý và cộng điểm tự động sau mỗi giao dịch.</p>
             </div>
           </div>
-        </div>
-      </section>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-zinc-300 md:max-w-xl">
+            <span className="flex items-center gap-1"><CheckCircle2 size={12} className="text-red-500" /> Mỗi 10.000 VNĐ = 1 điểm</span>
+            <span className="flex items-center gap-1"><CheckCircle2 size={12} className="text-red-500" /> Không quy đổi thành tiền mặt</span>
+            <span className="flex items-center gap-1"><CheckCircle2 size={12} className="text-red-500" /> Voucher áp dụng theo HSD riêng</span>
+          </div>
+        </section>
+      </main>
 
-      {/* TOAST */}
+      {/* TOAST - MINIMAL LIGHT */}
       <div
-        className={`fixed inset-0 z-[999] flex items-center justify-center transition-all duration-300 ${
-          toast.show
-            ? "opacity-100 visible"
-            : "opacity-0 invisible"
+        className={`fixed bottom-4 right-4 z-[999] transition-all duration-300 transform ${
+          toast.show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
         }`}
       >
         <div
-          className={`relative overflow-hidden min-w-[320px] max-w-[380px] rounded-2xl border backdrop-blur-xl px-6 py-5 ${
-            toast.type === "success"
-              ? "bg-[#0c1110]/96 border-emerald-500/20"
-              : "bg-[#161010]/96 border-red-500/20"
+          className={`flex items-start gap-3 w-[300px] rounded-xl border p-3.5 bg-white shadow-lg ${
+            toast.type === "success" ? "border-emerald-200" : "border-red-200"
           }`}
         >
-          <button
-            onClick={() =>
-              setToast((prev) => ({
-                ...prev,
-                show: false,
-              }))
-            }
-            className="absolute top-4 right-4 text-zinc-500 hover:text-white transition"
+          <div
+            className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+              toast.type === "success" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+            }`}
           >
-            <X size={16} />
-          </button>
-
-          <div className="relative flex items-center gap-4">
-            <div
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
-                toast.type === "success"
-                  ? "bg-emerald-500"
-                  : "bg-red-500"
-              }`}
-            >
-              {toast.type === "success" ? (
-                <PartyPopper size={22} />
-              ) : (
-                <Gift size={20} />
-              )}
-            </div>
-
-            <div>
-              <h4 className="font-black text-lg">
-                {toast.type === "success"
-                  ? "Thành công"
-                  : "Thông báo"}
-              </h4>
-
-              <p className="text-zinc-400 text-sm mt-1 leading-relaxed">
-                {toast.message}
-              </p>
-            </div>
+            {toast.type === "success" ? <PartyPopper size={14} /> : <Gift size={14} />}
           </div>
+
+          <div className="flex-1 min-w-0">
+            <h4 className="font-bold text-xs text-zinc-900">
+              {toast.type === "success" ? "Thành công" : "Thông báo"}
+            </h4>
+            <p className="text-zinc-500 text-[11px] mt-0.5 leading-relaxed break-words">
+              {toast.message}
+            </p>
+          </div>
+
+          <button
+            onClick={() => setToast((prev) => ({ ...prev, show: false }))}
+            className="text-zinc-400 hover:text-zinc-600 transition shrink-0"
+          >
+            <X size={13} />
+          </button>
         </div>
       </div>
     </div>

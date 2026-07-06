@@ -128,14 +128,15 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
               duration: 4000,
               position: 'top-center',
               style: {
-                borderRadius: '12px',
-                background: '#1a1a1a', 
-                color: '#fff',
-                border: '1px solid #dc2626',
+                borderRadius: '16px',
+                background: '#ffffff', 
+                color: '#1c1917',
+                border: '1px solid #fee2e2',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
                 fontSize: '11px', 
-                fontWeight: '900', 
+                fontWeight: '800', 
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '0.5px'
               },
               icon: <Armchair size={18} className="text-red-600" />, 
             });
@@ -153,14 +154,15 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         duration: 3000,
         position: 'top-center',
         style: {
-          borderRadius: '12px',
-          background: '#1a1a1a', 
-          color: '#fff',
-          border: '1px solid #dc2626',
+          borderRadius: '16px',
+          background: '#ffffff', 
+          color: '#1c1917',
+          border: '1px solid #fee2e2',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
           fontSize: '11px', 
-          fontWeight: '900', 
+          fontWeight: '800', 
           textTransform: 'uppercase',
-          letterSpacing: '1px'
+          letterSpacing: '0.5px'
         },
         icon: <Armchair size={18} className="text-red-600" />, 
       });
@@ -191,17 +193,25 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
     router.push(`/booking/${showtimeId}/combos`);
   };
 
-  if (fetching) return <div className="h-screen bg-black flex items-center justify-center"><Loader2 className="animate-spin text-red-600" /></div>;
+  if (fetching) return <div className="h-screen bg-[#f8f9fa] flex items-center justify-center"><Loader2 className="animate-spin text-red-600" /></div>;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 flex flex-col font-sans selection:bg-red-600 selection:text-white">
       <Toaster />
-      <div className="p-6 border-b border-white/5 flex items-center justify-between">
-        <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-500 uppercase text-[10px] font-black italic"><ChevronLeft size={16}/> Quay lại</button>
-        <div className="text-center font-[1000] uppercase italic text-xl tracking-tighter">{showtimeInfo?.movie?.title}</div>
+      
+      {/* THANH TIÊU ĐỀ TRÊN SÁNG */}
+      <div className="p-6 bg-white border-b border-zinc-200/80 flex items-center justify-between shadow-sm">
+        <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-400 hover:text-zinc-700 transition-colors uppercase text-[10px] font-black italic">
+          <ChevronLeft size={16}/> Quay lại
+        </button>
+        <div className="text-center font-[1000] uppercase italic text-xl tracking-tighter text-zinc-900">
+          {showtimeInfo?.movie?.title}
+        </div>
         <div className="w-20"></div>
       </div>
-      <div className="flex-1 py-10">
+
+      {/* KHU VỰC SƠ ĐỒ GHẾ CHÍNH */}
+      <div className="flex-1 py-10 px-4 max-w-7xl mx-auto w-full">
         <div className="select-none"> 
           <SeatMap 
             dbSeats={dbSeats} 
@@ -214,14 +224,15 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
                   duration: 3000,
                   position: 'top-center',
                   style: {
-                    borderRadius: '12px',
-                    background: '#1a1a1a', 
-                    color: '#fff',
-                    border: '1px solid #dc2626',
+                    borderRadius: '16px',
+                    background: '#ffffff', 
+                    color: '#1c1917',
+                    border: '1px solid #fee2e2',
+                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
                     fontSize: '11px', 
-                    fontWeight: '900', 
+                    fontWeight: '800', 
                     textTransform: 'uppercase',
-                    letterSpacing: '1px'
+                    letterSpacing: '0.5px'
                   },
                   icon: <Armchair size={18} className="text-red-600" />, 
                 });
@@ -236,12 +247,25 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
           />
         </div>
       </div>
-      <div className="p-8 ml-8 bg-zinc-950 border-t border-white/5 flex justify-between items-center sticky bottom-0 z-50">
-        <div>
-          <p className="text-[10px] text-zinc-500 font-black uppercase">Ghế: <span className="text-white">{selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || '...'}</span></p>
-          <div className="text-2xl font-[1000] text-red-600 italic">{(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ</div>
+
+      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG */}
+      <div className="p-6 px-20 bg-white border-t border-zinc-200 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] flex justify-between items-center sticky bottom-0 z-50">
+        <div className="space-y-0.5">
+          <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">
+            Ghế đã chọn: <span className="text-zinc-800 font-black">{selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || 'Chưa chọn'}</span>
+          </p>
+          <div className="text-2xl font-[1000] text-red-600 italic tracking-tight">
+            {(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ
+          </div>
         </div>
-        <button onClick={handleNext} className="px-10 py-4 bg-white text-black font-black uppercase italic rounded-2xl hover:bg-red-600 hover:text-white transition-all">Chọn Combo <ArrowRight className="inline ml-2" size={16}/></button>
+        
+        <button 
+          onClick={handleNext} 
+          className="px-8 py-4 bg-red-600 text-white font-black uppercase italic rounded-2xl hover:bg-red-700 active:scale-98 shadow-[0_4px_15px_rgba(220,38,38,0.2)] transition-all flex items-center gap-2 text-xs tracking-wider"
+        >
+          Chọn Combo 
+          <ArrowRight size={15}/>
+        </button>
       </div>
     </div>
   );

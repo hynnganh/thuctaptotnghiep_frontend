@@ -2,7 +2,7 @@ export default function AdminFooter() {
   return (
     <footer className="p-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 bg-[#050505]/30">
       <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">
-        &copy; 2026 A&K Cinema Management System. All Rights Reserved.
+        &copy; 2026 HNA Cinema Management System. All Rights Reserved.
       </p>
       <div className="flex gap-6 text-[9px] font-bold uppercase tracking-[0.2em]">
         <span className="text-green-500 flex items-center gap-1.5">

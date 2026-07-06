@@ -178,7 +178,7 @@ export default function StaffScannerPage() {
             <Camera size={24} className="animate-pulse" />
           </div>
           <h1 className="text-xl font-[1000] uppercase tracking-widest text-white flex items-center justify-center gap-2 italic">
-            A&K CINEMA <span className="text-red-600 bg-red-950/50 border border-red-600/30 px-2 py-0.5 rounded-lg text-xs font-black tracking-normal not-italic">POS SCANNER</span>
+            HNA CINEMA <span className="text-red-600 bg-red-950/50 border border-red-600/30 px-2 py-0.5 rounded-lg text-xs font-black tracking-normal not-italic">POS SCANNER</span>
           </h1>
           <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em] mt-1.5">Kiểm tra & Bàn giao vé tại quầy</p>
         </div>

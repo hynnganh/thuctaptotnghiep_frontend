@@ -57,7 +57,6 @@ export default function TrangQuanLyKhachHang() {
       <Toaster position="top-right" />
 
       <div className="max-w-6xl mx-auto space-y-5">
-        {/* --- HEADER THEO STYLE A&K THU NHỎ --- */}
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-900 pb-3.5">
           <div className="flex items-center gap-2.5">
             <div className="w-1.5 h-7 bg-red-600 rounded-full" />
@@ -65,7 +64,7 @@ export default function TrangQuanLyKhachHang() {
               <h1 className="text-base font-black text-white tracking-tight uppercase leading-none">
                 Khách hàng <span className="text-red-600">Hệ thống</span>
               </h1>
-              <p className="text-[8px] font-black uppercase tracking-wider text-zinc-600">A&K Cinema Management</p>
+              <p className="text-[8px] font-black uppercase tracking-wider text-zinc-600">HNA Cinema Management</p>
             </div>
           </div>
 

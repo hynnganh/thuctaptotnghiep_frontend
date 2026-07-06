@@ -46,7 +46,7 @@ export default function NotFound() {
         {/* Footer trang lỗi */}
         <div className="mt-16 pt-8 border-t border-white/5 opacity-50">
           <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-[0.3em]">
-            A&K Cinema • Support Center
+            HNA Cinema • Support Center
           </p>
         </div>
       </div>

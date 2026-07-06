@@ -1,115 +1,156 @@
 "use client";
 import React from 'react';
-import { ChevronRight, Zap, Star, ShieldCheck, Heart } from 'lucide-react';
+import { ArrowUpRight, Sparkles, Compass, Leaf, Clapperboard } from 'lucide-react';
 
-const SPECIAL_ROOMS = {
-  technology: [
-    { title: "IMAX", desc: "Công nghệ điện ảnh tân tiến nhất", img: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1000", badge: "Công nghệ" },
-    { title: "4DX", desc: "Đánh thức mọi giác quan", img: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000", badge: "Công nghệ" },
-    { title: "ULTRA 4DX", desc: "Trải nghiệm điện ảnh tột đỉnh", img: "https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=1000", badge: "Công nghệ", large: true },
+const STORIES = {
+  highlight: {
+    title: "Kiến trúc tương lai của điện ảnh xanh",
+    desc: "HNA chính thức vận hành tổ hợp phòng chiếu sử dụng 100% năng lượng tái tạo và vật liệu tái chế, thiết lập tiêu chuẩn mới cho mô hình rạp phim thân thiện với môi trường tại Việt Nam.",
+    img: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1000",
+    tag: "Tiêu Điểm"
+  },
+  subStories: [
+    {
+      title: "Không gian sảnh kết nối văn hóa",
+      desc: "Không chỉ là nơi chờ xem phim, sảnh rạp mới được thiết kế như một triển lãm nghệ thuật thu nhỏ, nơi trưng bày các tác phẩm hội họa và điện ảnh kinh điển.",
+      img: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000",
+      tag: "Không Gian"
+    },
+    {
+      title: "Ẩm thực điện ảnh hữu cơ",
+      desc: "Ra mắt menu bắp nước hoàn toàn mới sử dụng nguyên liệu hữu cơ bản địa, đóng gói trong bao bì tự phân hủy sinh học.",
+      img: "https://images.unsplash.com/photo-1513106580091-1d82408b8cd6?q=80&w=1000",
+      tag: "Dịch Vụ"
+    }
   ],
-  lifestyle: [
-    { title: "GOLD CLASS", desc: "Ghế ngồi hạng thương gia cao cấp", img: "https://images.unsplash.com/photo-1595769816263-9b910be24d5f?q=80&w=1000", badge: "Phong cách" },
-    { title: "L'AMOUR", desc: "Giường nằm thoải mái & tiện nghi", img: "https://images.unsplash.com/photo-1513106580091-1d82408b8cd6?q=80&w=1000", badge: "Phong cách" },
-    { title: "SWEETBOX", desc: "Không gian riêng tư cho cặp đôi", img: "https://images.unsplash.com/photo-1543536448-d247542f576c?q=80&w=1000", badge: "Phong cách" },
+  values: [
+    {
+      icon: <Compass className="text-emerald-600" size={18} />,
+      title: "Định hướng trải nghiệm",
+      desc: "Cá nhân hóa tối đa hành trình từ lúc đặt vé đến khi rời phòng chiếu."
+    },
+    {
+      icon: <Leaf className="text-emerald-600" size={18} />,
+      title: "Cam kết bền vững",
+      desc: "Giảm thiểu 80% rác thải nhựa dùng một lần tại tất cả các cụm rạp."
+    },
+    {
+      icon: <Clapperboard className="text-emerald-600" size={18} />,
+      title: "Tôn vinh nghệ thuật",
+      desc: "Dành riêng các suất chiếu đặc biệt để hỗ trợ phim độc lập Việt Nam."
+    }
   ]
 };
 
-export default function SpecialCinemasPage() {
+export default function CultureCinemasPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white pt-28 pb-20 px-6">
-      <div className="max-w-7xl mx-auto space-y-24">
+    <div className="min-h-screen bg-slate-50 text-slate-700 pt-20 pb-16 px-6 font-sans antialiased selection:bg-emerald-600 selection:text-white">
+      <div className="max-w-6xl mx-auto space-y-12">
         
-        {/* HEADER SECTION */}
-        <header className="text-center space-y-6">
-          <h1 className="text-5xl md:text-7xl font-[1000] italic uppercase tracking-tighter leading-none">
-            Tận hưởng cả thế giới <br /> 
-            <span className="text-red-600 underline decoration-white/10 underline-offset-8">điện ảnh tại A&K</span>
-          </h1>
-          <p className="text-zinc-500 font-black uppercase tracking-[0.5em] text-xs">
-            #CôngNghệ #TrảiNghiệm #PhongCách
+        {/* TIÊU ĐỀ CHÍNH - PHONG CÁCH TẠP CHÍ */}
+        <header className="border-b border-slate-200 pb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="md:col-span-2 space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
+              <Sparkles className="text-emerald-600" size={10} />
+              <span className="text-[9px] font-black uppercase tracking-wider text-emerald-700">Tạp Chí Điện Ảnh HNA</span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-[1000] tracking-tight text-slate-900 leading-tight">
+              HƠN CẢ MỘT BỘ PHIM, <br />
+              ĐÓ LÀ <span className="text-emerald-600 italic font-serif">Hành Trình Văn Hóa</span>
+            </h1>
+          </div>
+          <p className="text-slate-400 text-xs font-medium leading-relaxed md:text-right">
+            Khám phá những bước chuyển mình mạnh mẽ trong kiến trúc, công nghệ xanh và tư duy điện ảnh bền vững tại hệ thống rạp HNA.
           </p>
         </header>
 
-        {/* CÔNG NGHỆ SECTION */}
-        <section className="space-y-12">
-          <div className="flex items-end gap-6 border-l-4 border-red-600 pl-6">
-            <h2 className="text-4xl font-black uppercase italic tracking-tighter">Công Nghệ</h2>
-            <p className="text-zinc-500 text-sm max-w-md font-medium pb-1">
-              Kết hợp toàn diện của 3 yếu tố (màn hình, âm thanh, ghế ngồi) nâng cấp trải nghiệm.
-            </p>
-          </div>
+        {/* BỐ CỤC ĐA CỘT BẤT ĐỐI XỨNG */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* CỘT TRÁI (CHIẾM 7 CỘT): BÀI VIẾT TIÊU ĐIỂM LỚN */}
+          <section className="lg:col-span-7 space-y-6">
+            <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_4px_30px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+                <img 
+                  src={STORIES.highlight.img} 
+                  alt={STORIES.highlight.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-102"
+                />
+                <span className="absolute top-4 left-4 px-2.5 py-1 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-wider rounded-md">
+                  {STORIES.highlight.tag}
+                </span>
+              </div>
+              <div className="pt-4 px-2 space-y-2">
+                <h2 className="text-xl md:text-2xl font-black text-slate-950 tracking-tight hover:text-emerald-600 transition-colors cursor-pointer flex items-center gap-2">
+                  {STORIES.highlight.title}
+                  <ArrowUpRight size={18} className="inline opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                </h2>
+                <p className="text-slate-500 text-xs leading-relaxed font-medium">
+                  {STORIES.highlight.desc}
+                </p>
+              </div>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SPECIAL_ROOMS.technology.map((room, i) => (
+            {/* BA GIÁ TRỊ CỐT LÕI HÀNG NGANG */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              {STORIES.values.map((val, i) => (
+                <div key={i} className="p-4 bg-white border border-slate-200/60 rounded-2xl shadow-sm space-y-1.5">
+                  <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
+                    {val.icon}
+                  </div>
+                  <h4 className="text-xs font-black uppercase text-slate-900 tracking-tight">{val.title}</h4>
+                  <p className="text-slate-400 text-[10px] font-medium leading-normal">{val.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* CỘT PHẢI (CHIẾM 5 CỘT): DANH SÁCH BÀI VIẾT PHỤ THEO CHIỀU DỌC */}
+          <section className="lg:col-span-5 flex flex-col gap-5">
+            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 pl-1">Khám phá thêm</h3>
+            
+            {STORIES.subStories.map((story, i) => (
               <div 
                 key={i} 
-                className={`group relative overflow-hidden rounded-[2.5rem] border border-white/5 aspect-video md:aspect-square lg:aspect-auto ${room.large ? 'lg:col-span-2 lg:h-[400px]' : 'lg:h-[400px]'}`}
+                className="group flex flex-col sm:flex-row gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:border-emerald-500/20 transition-all cursor-pointer"
               >
-                <img 
-                  src={room.img} 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:rotate-1" 
-                  alt={room.title} 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
-                
-                <div className="absolute bottom-8 left-8 right-8 space-y-2">
-                  <span className="px-3 py-1 bg-red-600 text-[10px] font-black uppercase tracking-widest rounded-lg">
-                    {room.badge}
+                <div className="sm:w-28 aspect-video sm:aspect-square rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                  <img 
+                    src={story.img} 
+                    alt={story.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="flex flex-col justify-center space-y-1 min-w-0">
+                  <span className="text-[8px] font-black uppercase text-emerald-600 tracking-wider">
+                    {story.tag}
                   </span>
-                  <h3 className="text-3xl font-[1000] italic uppercase tracking-tighter">{room.title}</h3>
-                  <p className="text-zinc-400 text-sm font-medium">{room.desc}</p>
+                  <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-emerald-600 transition-colors">
+                    {story.title}
+                  </h4>
+                  <p className="text-slate-400 text-[11px] font-medium leading-snug line-clamp-2">
+                    {story.desc}
+                  </p>
                 </div>
               </div>
             ))}
-          </div>
-        </section>
 
-        {/* PHONG CÁCH SECTION */}
-        <section className="space-y-12">
-          <div className="flex items-end gap-6 border-l-4 border-white pl-6">
-            <h2 className="text-4xl font-black uppercase italic tracking-tighter">Phong Cách</h2>
-            <p className="text-zinc-500 text-sm max-w-md font-medium pb-1">
-              Phòng chiếu theo chủ đề mang đến trải nghiệm điện ảnh ấn tượng, đẳng cấp.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SPECIAL_ROOMS.lifestyle.map((room, i) => (
-              <div 
-                key={i} 
-                className="group relative h-[350px] overflow-hidden rounded-[3rem] border border-white/5"
-              >
-                <img 
-                  src={room.img} 
-                  className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" 
-                  alt={room.title} 
-                />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors" />
-                <div className="absolute inset-0 flex flex-col justify-end p-10 space-y-3">
-                   <div className="flex justify-between items-center">
-                      <h3 className="text-4xl font-[1000] italic uppercase tracking-tighter leading-none">{room.title}</h3>
-                      <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                        <ChevronRight size={24} />
-                      </div>
-                   </div>
-                   <p className="text-zinc-300 font-medium tracking-wide">{room.desc}</p>
-                </div>
+            {/* KHỐI HÀNH ĐỘNG (CTA) LỒNG VÀO BÊN PHẢI */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-2xl p-5 mt-auto space-y-4 shadow-md">
+              <div className="space-y-1">
+                <h4 className="text-sm font-black uppercase tracking-tight text-emerald-400">Trở thành một phần của cộng đồng xanh</h4>
+                <p className="text-slate-400 text-[11px] font-medium leading-normal">
+                  Nhận ngay thẻ thành viên Eco-Pass tích điểm gấp đôi khi mang theo bình nước cá nhân đến cụm rạp.
+                </p>
               </div>
-            ))}
-          </div>
-        </section>
+              <button className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-98 shadow-sm">
+                Đăng ký thành viên ngay
+              </button>
+            </div>
 
-        {/* CTA SECTION */}
-        <div className="bg-red-600 rounded-[3rem] p-12 text-center space-y-8 shadow-2xl shadow-red-600/20">
-            <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter text-white">
-               Bạn đã sẵn sàng trải nghiệm chưa?
-            </h2>
-            <button className="px-12 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-[#050505] hover:text-white transition-all shadow-xl">
-               Đặt vé ngay bây giờ
-            </button>
+          </section>
+
         </div>
-
       </div>
     </div>
   );

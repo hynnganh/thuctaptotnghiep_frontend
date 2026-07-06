@@ -36,7 +36,7 @@ interface MovieCardProps {
 }
 
 // ==========================================
-// 2. COMPONENT CON: MOVIECARD
+// 2. COMPONENT CON: MOVIECARD (LIGHT TONE)
 // ==========================================
 function MovieCard({ 
   id, 
@@ -55,9 +55,9 @@ function MovieCard({
   return (
     <Link 
       href={`/movies/${id}`} 
-      className="block group relative w-full overflow-hidden rounded-[1.2rem] bg-[#101115] border border-white/[0.04] transition-all duration-500 cursor-pointer shadow-md select-none"
+      className="block group relative w-full overflow-hidden rounded-[1.2rem] bg-white border border-slate-200/60 transition-all duration-500 cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] select-none"
     >
-      <div className={`relative w-full overflow-hidden bg-[#15161b] ${
+      <div className={`relative w-full overflow-hidden bg-slate-100 ${
         variant === "landscape" ? "aspect-[16/10]" : "h-[240px] md:h-[280px]"
       }`}>
         <img
@@ -70,9 +70,10 @@ function MovieCard({
           }}
         />
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
+        {/* Lớp phủ shadow giữ lại một chút phần dưới ảnh để hiển thị chữ sáng rõ nét */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 z-20">
-          <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white shadow-2xl transition-transform hover:scale-110 active:scale-95">
+          <div className="p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/40 text-white shadow-2xl transition-transform hover:scale-110 active:scale-95">
             <Play size={16} fill="currentColor" className="ml-0.5" />
           </div>
         </div>
@@ -91,17 +92,17 @@ function MovieCard({
         </div>
       </div>
       
-      {/* Thông tin phim */}
-      <div className="p-2 space-y-1">
-        <h3 className="font-bold text-white text-[13px] line-clamp-1 tracking-tight group-hover:text-red-500 transition-colors">
+      {/* Thông tin phim (Text màu tối trên nền trắng) */}
+      <div className="p-3 space-y-1.5 bg-white">
+        <h3 className="font-bold text-slate-800 text-[13px] line-clamp-1 tracking-tight group-hover:text-red-600 transition-colors">
           {title}
         </h3>
-        <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
-          <span className="line-clamp-1 max-w-[65%]">
+        <div className="flex items-center justify-between text-[10px] font-medium">
+          <span className="line-clamp-1 max-w-[65%] text-slate-500">
             {genreNames?.length > 0 ? genreNames.join(" • ") : "Đang cập nhật"}
           </span>
-          <span className={`text-[8px] font-bold px-1 rounded uppercase ${
-            isShowing ? "text-orange-400 bg-orange-400/10" : "text-sky-400 bg-sky-400/10"
+          <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${
+            isShowing ? "text-orange-600 bg-orange-50 border border-orange-100" : "text-sky-600 bg-sky-50 border border-sky-100"
           }`}>
             {isShowing ? "Đang Chiếu" : "Sắp Chiếu"}
           </span>
@@ -112,7 +113,7 @@ function MovieCard({
 }
 
 // ==========================================
-// 3. COMPONENT CHÍNH: HEROSECTION
+// 3. COMPONENT CHÍNH: HEROSECTION (LIGHT TONE)
 // ==========================================
 export default function HeroSection() {
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -120,7 +121,6 @@ export default function HeroSection() {
   const [activeBanner, setActiveBanner] = useState<Banner | null>(null);
   const [loadingData, setLoadingData] = useState(true);
 
-  // ─── CALL API ĐỒNG LOẠT (CHẠY LẦN ĐẦU KHI VÀO TRANG) ───
   useEffect(() => {
     const initPageData = async () => {
       setLoadingData(true);
@@ -154,15 +154,16 @@ export default function HeroSection() {
 
   if (!banners.length) return null;
 
-  // Lấy 3 phim đầu tiên hiển thị cho cột "Đang xem nhiều"
   const nowWatchingMovies = allMovies.slice(0, 3);
 
   return (
-<section className="w-full bg-[#0a0b0e] px-4 md:px-16 pt-4 md:pt-6 pb-8 space-y-8 text-white mt-0">      {/* BỐ CỤC CHIA HAI CỘT: BANNER CHÍNH VÀ ĐANG XEM NHIỀU */}
+    <section className="w-full bg-slate-50 px-4 md:px-16 pt-4 md:pt-6 pb-10 space-y-8 text-slate-800 mt-0">
+      
+      {/* BỐ CỤC CHIA HAI CỘT: BANNER CHÍNH VÀ ĐANG XEM NHIỀU */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-[1400px] mx-auto">
         
-        {/* CỘT TRÁI (CHIẾM 2 PHẦN): SWIPER HERO BANNER */}
-        <div className="lg:col-span-2 relative h-[340px] md:h-[420px] rounded-[2rem] overflow-hidden group shadow-2xl border border-white/[0.04]">
+        {/* CỘT TRÁI: SWIPER HERO BANNER */}
+        <div className="lg:col-span-2 relative h-[340px] md:h-[420px] rounded-[2rem] overflow-hidden group shadow-lg border border-slate-200/60">
           <Swiper
             modules={[Autoplay, EffectFade]}
             effect="fade"
@@ -183,20 +184,21 @@ export default function HeroSection() {
             ))}
           </Swiper>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent z-10" />
+          {/* Lớp phủ bảo vệ tương phản text cho Banner */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent z-10" />
 
-          <div className="absolute bottom-6 left-6 md:left-12 right-6 z-20 space-y-2 md:space-y-3 select-none">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 bg-white/10 px-2.5 py-0.5 rounded-md w-fit backdrop-blur-md">
+          <div className="absolute bottom-6 left-6 md:left-12 right-6 z-20 space-y-2 md:space-y-3 select-none text-white">
+            <span className="text-[10px] uppercase font-black tracking-widest text-slate-200 bg-white/10 px-2.5 py-0.5 rounded-md w-fit backdrop-blur-md border border-white/10">
               Phim Nổi Bật
             </span>
-            <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tight leading-none drop-shadow-md line-clamp-1 max-w-xl">
+            <h1 className="text-2xl md:text-4xl font-[900] uppercase tracking-tight leading-none drop-shadow-md line-clamp-1 max-w-xl">
               {activeBanner?.title || "Trải Nghiệm Điện Ảnh Đỉnh Cao"}
             </h1>
-            <p className="text-[11px] md:text-xs text-zinc-300/80 max-w-md leading-relaxed line-clamp-2">
+            <p className="text-[11px] md:text-xs text-slate-200/90 max-w-md leading-relaxed line-clamp-2">
               Săn vé an toàn, lựa chọn vị trí ngồi đẹp nhất và thưởng thức trọn vẹn những bộ phim bom tấn đỉnh cao cùng HNA Cinema.
             </p>
-            <div className="pt-1 flex items-center gap-4 text-[11px] text-zinc-400 font-medium">
+            <div className="pt-1 flex items-center gap-4 text-[11px] text-slate-300 font-bold">
               <span className="flex items-center gap-1"><Star size={12} className="fill-amber-400 text-amber-400"/> 4.8 IMDB</span>
               <span>• 2026</span>
             </div>
@@ -212,10 +214,10 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* CỘT PHẢI (CHIẾM 1 PHẦN): DANH SÁCH ĐANG XEM NHIỀU */}
+        {/* CỘT PHẢI: DANH SÁCH ĐANG XEM NHIỀU */}
         <div className="flex flex-col justify-between space-y-3 h-full">
-          <h2 className="text-sm font-bold tracking-tight text-zinc-100 pl-1 flex items-center gap-2">
-            <Film size={14} className="text-red-500" /> Đang xem nhiều
+          <h2 className="text-sm font-black tracking-tight text-slate-800 pl-1 flex items-center gap-2 uppercase tracking-wide">
+            <Film size={14} className="text-red-600" /> Phim Mới Nhất
           </h2>
           
           <div className="flex-1 grid grid-rows-3 gap-3">
@@ -224,36 +226,38 @@ export default function HeroSection() {
                 <Link 
                   href={`/movies/${movie.id}`}
                   key={movie.id}
-                  className="flex items-center gap-3 p-2 rounded-[1.2rem] bg-[#121318] border border-white/[0.02] hover:bg-[#181920] transition group"
+                  className="flex items-center gap-3 p-2 rounded-[1.2rem] bg-white border border-slate-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:bg-slate-100/50 hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition group"
                 >
-                  <div className="relative w-24 h-full aspect-[4/3] rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
+                  <div className="relative w-24 h-full aspect-[4/3] rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
                     <img 
                       src={getImageUrl(movie.posterUrl)} 
                       alt={movie.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <Play size={12} fill="currentColor" className="text-white opacity-80" />
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <div className="p-1.5 rounded-full bg-white/40 backdrop-blur-sm text-white">
+                        <Play size={10} fill="currentColor" />
+                      </div>
                     </div>
                   </div>
                   <div className="flex-1 space-y-1 pr-2">
-                    <h3 className="text-xs font-bold line-clamp-1 group-hover:text-red-500 transition">
+                    <h3 className="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-red-600 transition">
                       {movie.title}
                     </h3>
-                    <p className="text-[10px] text-zinc-500 line-clamp-1">
+                    <p className="text-[10px] text-slate-400 font-medium line-clamp-1">
                       {movie.genreNames?.slice(0, 2).join(", ") || movie.genres?.map((g: any) => g.name).slice(0, 2).join(", ") || "Đang cập nhật"}
                     </p>
-                    <div className="flex items-center gap-2 text-[9px] text-zinc-400 font-mono">
-                      <span className="flex items-center gap-0.5 text-amber-400">
+                    <div className="flex items-center gap-2 text-[9px] font-mono font-bold">
+                      <span className="flex items-center gap-0.5 text-amber-500">
                         <Star size={8} fill="currentColor"/> {movie.rating ? Number(movie.rating).toFixed(1) : "0.0"}
                       </span>
-                      <span>• {movie.ageRating || "P"}</span>
+                      <span className="text-slate-400">• {movie.ageRating || "P"}</span>
                     </div>
                   </div>
                 </Link>
               ))
             ) : (
-              <div className="row-span-3 flex items-center justify-center text-xs text-zinc-500 bg-[#121318] rounded-[1.2rem] border border-white/[0.02]">
+              <div className="row-span-3 flex items-center justify-center text-xs text-slate-400 bg-white rounded-[1.2rem] border border-slate-200/60 shadow-sm">
                 Không có dữ liệu phim thịnh hành...
               </div>
             )}
@@ -262,16 +266,17 @@ export default function HeroSection() {
       </div>
 
       {/* ================= HÀNG DANH SÁCH PHIM XU HƯỚNG ================= */}
-      <div className="max-w-[1400px] mx-auto space-y-3">
-        <div className="flex items-center justify-between pb-1 border-b border-white/[0.04]">
-          <h2 className="text-xs font-black uppercase tracking-[0.15em] text-zinc-300">
+      <div className="max-w-[1400px] mx-auto space-y-3 pt-2">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+          <h2 className="text-xs font-black uppercase tracking-[0.15em] text-slate-500">
             Phim Xu Hướng
           </h2>
+          {/* Mũi tên điều hướng phối màu Light Mode sạch sẽ */}
           <div className="flex items-center gap-2">
-            <button className="hero-prev p-1.5 rounded-full bg-black/60 border border-white/10 text-zinc-400 hover:text-white hover:bg-zinc-800 transition shadow-md disabled:opacity-20 z-40">
+            <button className="hero-prev p-1.5 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-400 hover:shadow-sm transition disabled:opacity-30 z-40">
               <ChevronLeft size={14} />
             </button>
-            <button className="hero-next p-1.5 rounded-full bg-black/60 border border-white/10 text-zinc-400 hover:text-white hover:bg-zinc-800 transition shadow-md disabled:opacity-20 z-40">
+            <button className="hero-next p-1.5 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-400 hover:shadow-sm transition disabled:opacity-30 z-40">
               <ChevronRight size={14} />
             </button>
           </div>
@@ -279,7 +284,7 @@ export default function HeroSection() {
 
         <div className="relative">
           {loadingData && (
-            <div className="absolute inset-0 bg-[#0a0b0e]/50 backdrop-blur-sm z-50 flex items-center justify-center text-xs text-red-500 font-bold transition-all">
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center text-xs text-red-600 font-bold transition-all">
               Đang tải danh sách phim...
             </div>
           )}
@@ -302,7 +307,7 @@ export default function HeroSection() {
               className="!overflow-visible"
             >
               {allMovies.map((movie) => (
-                <SwiperSlide key={movie.id} className="py-1">
+                <SwiperSlide key={movie.id} className="py-2">
                   <MovieCard
                     id={movie.id}
                     title={movie.title}
@@ -317,7 +322,7 @@ export default function HeroSection() {
               ))}
             </Swiper>
           ) : (
-            <div className="w-full py-16 flex items-center justify-center text-xs text-zinc-500 bg-[#121318] rounded-[1.2rem] border border-white/[0.02]">
+            <div className="w-full py-16 flex items-center justify-center text-xs text-slate-400 bg-white rounded-[1.2rem] border border-slate-200/60 shadow-sm">
               Hiện không có bộ phim nào đang chiếu.
             </div>
           )}

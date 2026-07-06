@@ -63,7 +63,7 @@ export default function AdminSidebar() {
         </div>
         <div className="flex flex-col">
           <span className="text-white font-black uppercase tracking-tight text-base leading-none">
-            A&K <span className="text-red-600">Admin</span>
+            HNA <span className="text-red-600">Admin</span>
           </span>
           <span className="text-[8px] text-zinc-600 font-black uppercase tracking-wider mt-1">Trung tâm điều hành</span>
         </div>
