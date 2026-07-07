@@ -119,7 +119,7 @@ export default function LoginPage() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="admin@akcinema.com"
+                  placeholder="admin@hna-cinema.com"
                   className="w-full bg-zinc-900/40 hover:bg-zinc-900/80 focus:bg-zinc-950 border border-zinc-800/80 focus:border-red-500/80 rounded-2xl py-4 pl-12 pr-5 text-sm text-white placeholder:text-zinc-600 outline-none focus:ring-4 focus:ring-red-500/10 transition-all backdrop-blur-md"
                 />
               </div>

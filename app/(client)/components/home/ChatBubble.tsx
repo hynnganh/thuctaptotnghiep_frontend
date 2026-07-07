@@ -324,10 +324,6 @@ export default function ChatBubble() {
 
   return (
     <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end select-none font-sans antialiased text-zinc-800">
-      
-      {/* ======================================================== */}
-      {/* KHUNG WINDOW CHAT SÁNG SANG TRỌNG (LIGHT MINIMAL LOOK) */}
-      {/* ======================================================== */}
       <div 
         className={`fixed bg-white border border-zinc-200 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden transform transition-all duration-300 ${isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"}`}
         style={{ width: "385px", height: "600px", left: `${position.x}px`, top: `${position.y}px`, transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s, left 0.1s ease-out, top 0.1s ease-out' }}
