@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import MovieCard from './MovieCard'; // 🎯 Chú ý đường dẫn
+import MovieCard from './MovieCard';
 import { apiRequest } from "@/app/lib/api"; 
 import { SlidersHorizontal, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
@@ -111,23 +111,20 @@ export default function TatCaPhim() {
     setSelectedAgeRatings([]);
   };
 
-  // 🎯 Biến này để kiểm tra xem user CÓ ĐANG DÙNG LỌC hay không
   const isFiltering = selectedGenres.length > 0 || selectedAgeRatings.length > 0;
-  
-  // 🎯 Lấy SỐ LƯỢNG PHIM lọc được
   const filteredCount = filteredAndSortedMovies.length;
 
   return (
-    <div className="bg-[#050505] min-h-screen pt-5 pb-20 px-6 md:px-16 text-white font-sans">
+    <div className="bg-[#fcfcfd] min-h-screen pt-5 pb-20 px-6 md:px-16 text-slate-800 font-sans antialiased">
       
-      {/* HEADER GIỐNG TRANG NOW SHOWING */}
-      <div className="max-w-[1440px] mx-auto mb-5 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-12 relative z-30">
+      {/* ===== HEADER LIGHT MODE ===== */}
+      <div className="max-w-[1440px] mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-slate-200/60 pb-12 relative z-30">
         
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-red-600 font-black tracking-[0.4em] text-[10px] uppercase">
             <span className="w-16 h-[2px] bg-red-600"></span> HNA Cinema Collection
           </div>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none italic">
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none italic text-slate-900">
             TẤT CẢ <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-orange-500">
               PHIM CHIẾU RẠP
@@ -137,7 +134,7 @@ export default function TatCaPhim() {
 
         {/* KHU VỰC BÊN PHẢI (VĂN BẢN VÀ NÚT LỌC) */}
         <div className="flex flex-col md:items-end gap-4 relative" ref={filterRef}>
-          <div className="max-w-xs text-gray-500 text-sm font-bold leading-relaxed border-l-2 border-red-600 pl-6 mb-2">
+          <div className="max-w-xs text-slate-400 text-sm font-bold leading-relaxed border-l-2 border-red-600 pl-6 mb-2">
             Khám phá thế giới điện ảnh đa dạng. Lọc và tìm kiếm những siêu phẩm phù hợp nhất với sở thích của bạn!
           </div>
           
@@ -147,35 +144,35 @@ export default function TatCaPhim() {
               {isFiltering && (
                 <button 
                   onClick={clearAllFilters}
-                  className="flex items-center gap-1.5 px-3 py-2 text-zinc-500 hover:text-red-500 transition-colors text-xs font-bold"
+                  className="flex items-center gap-1.5 px-3 py-2 text-slate-400 hover:text-red-600 transition-colors text-xs font-bold"
                 >
                   <X size={14} /> Xóa lọc
                 </button>
               )}
 
-              {/* 🎯 NÚT BỘ LỌC Y CHANG ẢNH */}
+              {/* NÚT BỘ LỌC LIGHT MODE */}
               <button 
                 onClick={() => setShowFilters(!showFilters)}
-                className={`relative flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black tracking-widest uppercase transition-all duration-300 border-[2px] ${
+                className={`relative flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black tracking-widest uppercase transition-all duration-300 border ${
                   showFilters || isFiltering
-                  ? "bg-zinc-900 text-white border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
-                  : "bg-[#121212] text-white hover:border-white/50 border-transparent"
+                    ? "bg-slate-900 text-white border-slate-900 shadow-[0_10px_25px_rgba(15,23,42,0.15)]" 
+                    : "bg-white text-slate-700 hover:border-slate-400 border-slate-200 shadow-sm"
                 }`}
               >
                 <SlidersHorizontal size={14} className="opacity-90" />
                 BỘ LỌC
                 
-                {/* 🎯 HIỂN THỊ SỐ PHIM LỌC ĐƯỢC (Chỉ hiện khi đang bật lọc) */}
+                {/* HIỂN THỊ SỐ PHIM LỌC ĐƯỢC */}
                 {isFiltering && (
-                  <span className="absolute -top-2 -right-3 flex items-center justify-center min-w-[22px] px-1.5 h-[22px] bg-red-500 text-white rounded-full text-[10px] font-bold shadow-md z-10 border-[2px] border-[#050505]">
+                  <span className="absolute -top-2 -right-3 flex items-center justify-center min-w-[22px] px-1.5 h-[22px] bg-red-500 text-white rounded-full text-[10px] font-bold shadow-md z-10 border-[2px] border-[#fcfcfd]">
                     {filteredCount}
                   </span>
                 )}
               </button>
 
-              {/* 🛠 KHUNG BỘ LỌC FLOATING */}
+              {/* KHUNG BỘ LỌC FLOATING LIGHT MODE */}
               <div 
-                className={`absolute top-[calc(100%+16px)] right-0 w-[320px] md:w-[380px] bg-black/60 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.9)] z-40 overflow-hidden transition-all duration-300 origin-top-right ${
+                className={`absolute top-[calc(100%+16px)] right-0 w-[320px] md:w-[380px] bg-white border border-slate-200/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] z-40 overflow-hidden transition-all duration-300 origin-top-right ${
                   showFilters ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
                 }`}
               >
@@ -183,18 +180,18 @@ export default function TatCaPhim() {
                   {/* Filter Thể Loại */}
                   {availableGenres.length > 0 && (
                     <div>
-                      <h3 className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
-                         Thể Loại <div className="flex-1 h-px bg-white/10"></div>
+                      <h3 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+                        Thể Loại <div className="flex-1 h-px bg-slate-100"></div>
                       </h3>
                       <div className="flex flex-wrap gap-1.5">
                         {availableGenres.map(genre => (
                           <button
                             key={genre}
                             onClick={() => toggleFilter(genre, selectedGenres, setSelectedGenres)}
-                            className={`px-3.5 py-1.5 rounded-lg text-[9px] font-bold tracking-wider transition-all duration-300 ${
+                            className={`px-3.5 py-1.5 rounded-lg text-[9px] font-bold tracking-wider transition-all duration-300 border ${
                               selectedGenres.includes(genre)
-                                ? "bg-red-600 text-white shadow-[0_4px_15px_rgba(220,38,38,0.4)]"
-                                : "bg-white/5 text-zinc-300 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10"
+                                ? "bg-red-50 border-red-200 text-red-600 shadow-sm"
+                                : "bg-slate-50 text-slate-600 border-transparent hover:bg-slate-100 hover:text-slate-900"
                             }`}
                           >
                             {genre}
@@ -207,18 +204,18 @@ export default function TatCaPhim() {
                   {/* Filter Độ Tuổi */}
                   {availableAgeRatings.length > 0 && (
                     <div>
-                      <h3 className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
-                         Độ Tuổi <div className="flex-1 h-px bg-white/10"></div>
+                      <h3 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+                        Độ Tuổi <div className="flex-1 h-px bg-slate-100"></div>
                       </h3>
                       <div className="flex flex-wrap gap-1.5">
                         {availableAgeRatings.map(age => (
                           <button
                             key={age}
                             onClick={() => toggleFilter(age, selectedAgeRatings, setSelectedAgeRatings)}
-                            className={`px-3.5 py-1.5 rounded-lg text-[9px] font-black tracking-wider transition-all duration-300 ${
+                            className={`px-3.5 py-1.5 rounded-lg text-[9px] font-black tracking-wider transition-all duration-300 border ${
                               selectedAgeRatings.includes(age)
-                                ? "bg-orange-500 text-white shadow-[0_4px_15px_rgba(249,115,22,0.4)]"
-                                : "bg-white/5 text-zinc-300 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10"
+                                ? "bg-orange-50 border-orange-200 text-orange-600 shadow-sm"
+                                : "bg-slate-50 text-slate-600 border-transparent hover:bg-slate-100 hover:text-slate-900"
                             }`}
                           >
                             {age}
@@ -234,14 +231,14 @@ export default function TatCaPhim() {
         </div>
       </div>
 
-      {/* SKELETON LOADING */}
+      {/* SKELETON LOADING LIGHT MODE */}
       {loading ? (
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="flex flex-col gap-4 relative animate-pulse">
-              <div className="aspect-[2/3] w-full bg-zinc-900 rounded-[2.5rem]" />
-              <div className="h-6 w-3/4 bg-zinc-900 rounded-lg" />
-              <div className="h-4 w-1/2 bg-zinc-900 rounded-lg" />
+              <div className="aspect-[2/3] w-full bg-slate-200 rounded-[2.5rem]" />
+              <div className="h-6 w-3/4 bg-slate-200 rounded-lg" />
+              <div className="h-4 w-1/2 bg-slate-200 rounded-lg" />
             </div>
           ))}
         </div>
@@ -252,7 +249,7 @@ export default function TatCaPhim() {
           {currentMovies.length > 0 ? (
             currentMovies.map((movie) => (
               <div key={movie.id} className="relative group/card flex flex-col">
-                <div className="relative z-10 rounded-[2.5rem] overflow-hidden transition-all duration-300 group-hover/card:-translate-y-2 group-hover/card:shadow-[0_15px_40px_rgba(0,0,0,0.6)]">
+                <div className="relative z-10 rounded-[2.5rem] overflow-hidden transition-all duration-300 group-hover/card:-translate-y-2 group-hover/card:shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
                   <MovieCard
                     id={movie.id}
                     title={movie.title}
@@ -267,8 +264,8 @@ export default function TatCaPhim() {
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-32 border border-dashed border-white/10 rounded-[3rem]">
-              <p className="text-zinc-600 font-black uppercase tracking-[0.3em] italic text-xl">
+            <div className="col-span-full text-center py-32 border border-dashed border-slate-200 rounded-[3rem] bg-white">
+              <p className="text-slate-400 font-black uppercase tracking-[0.3em] italic text-xl">
                 Không tìm thấy phim phù hợp...
               </p>
             </div>
@@ -276,21 +273,21 @@ export default function TatCaPhim() {
         </div>
       )}
 
-      {/* ĐIỀU HƯỚNG TRANG (PAGINATION NỔI) */}
+      {/* ĐIỀU HƯỚNG TRANG LIGHT MODE (PAGINATION) */}
       {!loading && totalPages > 1 && (
-        <div className="mt-16 flex justify-center items-center gap-3">
+        <div className="mt-20 flex justify-center items-center gap-3">
           <button
             onClick={() => {
               setCurrentPage(p => Math.max(1, p - 1));
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             disabled={currentPage === 1}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 text-white disabled:opacity-20 hover:bg-red-600 transition-all duration-300"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 disabled:opacity-30 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
           >
             <ChevronLeft size={18} />
           </button>
 
-          <div className="flex gap-2 bg-white/5 p-2 rounded-full">
+          <div className="flex gap-2 bg-white p-2 rounded-full border border-slate-200/80 shadow-sm">
             {[...Array(totalPages)].map((_, idx) => (
               <button
                 key={idx}
@@ -300,8 +297,8 @@ export default function TatCaPhim() {
                 }}
                 className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-black transition-all duration-300 ${
                   currentPage === idx + 1
-                    ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] scale-110"
-                    : "bg-transparent text-zinc-400 hover:text-white hover:bg-white/10"
+                    ? "bg-red-600 text-white shadow-[0_4px_15px_rgba(220,38,38,0.3)] scale-105"
+                    : "bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                 }`}
               >
                 {idx + 1}
@@ -315,21 +312,21 @@ export default function TatCaPhim() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             disabled={currentPage === totalPages}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 text-white disabled:opacity-20 hover:bg-red-600 transition-all duration-300"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 disabled:opacity-30 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
           >
             <ChevronRight size={18} />
           </button>
         </div>
       )}
 
-      {/* FOOTER */}
-      <div className="mt-32 text-center border-t border-white/5 pt-20">
-        <p className="text-gray-600 font-bold tracking-widest text-xs uppercase mb-6">
+      {/* BOTTOM ACTION */}
+      <div className="mt-32 text-center border-t border-slate-200/60 pt-20">
+        <p className="text-slate-400 font-bold tracking-widest text-xs uppercase mb-6">
           Hết danh sách phim
         </p>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="px-12 py-5 border border-white/10 rounded-full font-black text-[10px] tracking-[0.4em] uppercase text-gray-400 hover:text-white hover:border-red-600 transition-all active:scale-95 shadow-2xl"
+          className="px-12 py-5 bg-white border border-slate-200 text-slate-500 rounded-full font-black text-[10px] tracking-[0.4em] uppercase hover:text-red-600 hover:border-red-400 hover:shadow-md transition-all active:scale-95"
         >
           Quay lại đầu trang
         </button>
