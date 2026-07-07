@@ -14,7 +14,7 @@ export default function Footer() {
           {/* Cột 1: Thương hiệu & Mạng xã hội */}
           <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
             <h4 className="text-2xl font-black text-black tracking-tighter uppercase italic">
-              H<span className="text-yellow-500 font-sans not-italic">N</span>A <span className="text-xs text-zinc-400 font-bold tracking-[0.2em] not-italic">Việt Nam</span>
+              H<span className="text-red-600 font-sans not-italic">N</span>A <span className="text-xs text-zinc-400 font-bold tracking-[0.2em] not-italic">Việt Nam</span>
             </h4>
             <p className="text-zinc-500 leading-relaxed max-w-sm text-[13px]">
               Hệ thống rạp chiếu phim hiện đại với công nghệ âm thanh Dolby Atmos và màn hình IMAX cực đại. Mang đến trải nghiệm điện ảnh đích thực.
@@ -28,7 +28,7 @@ export default function Footer() {
                 <Link 
                   key={idx} 
                   href={item.href} 
-                  className="hover:text-black text-zinc-400 transition-all p-2.5 bg-zinc-100 rounded-xl hover:bg-zinc-200/70 border border-zinc-200/40"
+                  className="hover:text-red-600 text-zinc-400 transition-all p-2.5 bg-zinc-100 rounded-xl hover:bg-red-50 border border-zinc-200/40 hover:border-red-100"
                   aria-label="Social Media"
                 >
                   <item.Icon size={16} />
@@ -39,7 +39,7 @@ export default function Footer() {
 
           {/* Cột 2: Khám phá */}
           <div>
-            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-yellow-400 w-fit pb-1">
+            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-red-500 w-fit pb-1">
               Khám phá
             </h4>
             <ul className="flex flex-col gap-3 font-medium text-[13px]">
@@ -47,7 +47,7 @@ export default function Footer() {
                 <li key={item}>
                   <Link 
                     href="#" 
-                    className="hover:text-yellow-600 text-zinc-500 transform hover:translate-x-1 transition-all duration-200 inline-block"
+                    className="hover:text-red-600 text-zinc-500 transform hover:translate-x-1 transition-all duration-200 inline-block"
                   >
                     {item}
                   </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
 
           {/* Cột 3: Chính sách */}
           <div>
-            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-yellow-400 w-fit pb-1">
+            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-red-500 w-fit pb-1">
               Điều khoản
             </h4>
             <ul className="flex flex-col gap-3 font-medium text-[13px]">
@@ -66,7 +66,7 @@ export default function Footer() {
                 <li key={item}>
                   <Link 
                     href="#" 
-                    className="hover:text-yellow-600 text-zinc-500 transform hover:translate-x-1 transition-all duration-200 inline-block"
+                    className="hover:text-red-600 text-zinc-500 transform hover:translate-x-1 transition-all duration-200 inline-block"
                   >
                     {item}
                   </Link>
@@ -77,17 +77,17 @@ export default function Footer() {
 
           {/* Cột 4: Liên hệ & Hỗ trợ */}
           <div>
-            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-yellow-400 w-fit pb-1">
+            <h4 className="text-zinc-900 font-black uppercase tracking-wider text-xs mb-4 md:mb-6 border-b-2 border-red-500 w-fit pb-1">
               Hỗ trợ
             </h4>
             <div className="flex flex-col gap-4 text-[13px] font-medium">
               <div className="flex items-start gap-3 group cursor-pointer">
-                <Phone size={16} className="text-yellow-500 shrink-0 mt-0.5" />
-                <span className="text-zinc-600 group-hover:text-black transition-colors">Hotline: 0869803329</span>
+                <Phone size={16} className="text-red-500 shrink-0 mt-0.5" />
+                <span className="text-zinc-600 group-hover:text-red-600 transition-colors">Hotline: 0869803329</span>
               </div>
               <div className="flex items-start gap-3 group break-all cursor-pointer">
-                <Mail size={16} className="text-yellow-500 shrink-0 mt-0.5" />
-                <span className="text-zinc-600 group-hover:text-black transition-colors">Email: huynhthingocanh2008@gmail.com</span>
+                <Mail size={16} className="text-red-500 shrink-0 mt-0.5" />
+                <span className="text-zinc-600 group-hover:text-red-600 transition-colors">Email: huynhthingocanh2008@gmail.com</span>
               </div>
               <div className="flex items-start gap-3 text-zinc-400 font-normal">
                 <MapPin size={16} className="text-zinc-400 shrink-0 mt-0.5" />

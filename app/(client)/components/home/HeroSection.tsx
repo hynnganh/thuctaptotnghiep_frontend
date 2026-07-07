@@ -265,8 +265,8 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ================= HÀNG DANH SÁCH PHIM XU HƯỚNG ================= */}
-      <div className="max-w-[1400px] mx-auto space-y-3 pt-2">
+{/* ================= HÀNG DANH SÁCH PHIM XU HƯỚNG ================= */}
+      <div className="max-w-[1400px] mx-auto space-y-3 pt-2 overflow-hidden">
         <div className="flex items-center justify-between pb-2 border-b border-slate-200">
           <h2 className="text-xs font-black uppercase tracking-[0.15em] text-slate-500">
             Phim Xu Hướng
@@ -282,7 +282,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative w-full overflow-hidden">
           {loadingData && (
             <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center text-xs text-red-600 font-bold transition-all">
               Đang tải danh sách phim...
@@ -297,14 +297,14 @@ export default function HeroSection() {
                 nextEl: ".hero-next",
               }}
               spaceBetween={16}
-              slidesPerView={2.2}
+              slidesPerView={2}
               breakpoints={{
-                480: { slidesPerView: 2.5 },
-                768: { slidesPerView: 3.8 },
-                1024: { slidesPerView: 5.2 },
-                1400: { slidesPerView: 6.5 }, 
+                480: { slidesPerView: 2 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 5 },
+                1400: { slidesPerView: 6 }, 
               }}
-              className="!overflow-visible"
+              className="w-full"
             >
               {allMovies.map((movie) => (
                 <SwiperSlide key={movie.id} className="py-2">
