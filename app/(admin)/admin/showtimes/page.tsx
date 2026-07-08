@@ -128,7 +128,6 @@ export default function AdminShowtimePage() {
 
   return (
     <div className="min-h-screen bg-[#000000] text-zinc-300 p-6 font-sans antialiased select-none tracking-tight">
-      <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-900 pb-5">
           <div className="flex items-center gap-3.5">

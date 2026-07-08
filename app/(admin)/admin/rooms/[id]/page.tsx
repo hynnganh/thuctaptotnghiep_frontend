@@ -124,7 +124,7 @@ export default function SeatDesignerPage() {
     if (danhSachGhe.length === 0) return toast.error("Phòng đang trống!", whiteToast);
     
     openConfirm(
-      "Dọn sạch sơ đồ (Ảo)?",
+      "Dọn sạch sơ đồ?",
       `Toàn bộ ghế sẽ bị gỡ khỏi màn hình. Cần bấm LƯU DATABASE để cập nhật vào máy chủ.`,
       async () => {
         closeConfirm();
@@ -159,7 +159,7 @@ export default function SeatDesignerPage() {
     if (totalToGenerate > maxCapacity) return toast.error(`Vượt sức chứa cấu hình rạp (${maxCapacity})!`, whiteToast);
 
     openConfirm(
-      "Tạo sơ đồ hàng loạt (Ảo)?",
+      "Tạo sơ đồ hàng loạt?",
       `Tạo ma trận ${config.rows}x${config.cols}. Thao tác này sẽ gỡ bỏ các ghế cũ trên màn hình. Cần bấm LƯU DATABASE để áp dụng.`,
       async () => {
         closeConfirm();
@@ -312,7 +312,6 @@ export default function SeatDesignerPage() {
 
   return (
     <div className="h-screen bg-[#050505] text-zinc-400 flex flex-col overflow-hidden font-sans">
-      <Toaster position="top-right" />
       <CustomModal />
       
       <header className="h-[70px] px-6 border-b border-white/5 flex justify-between items-center bg-[#050505] z-30">
