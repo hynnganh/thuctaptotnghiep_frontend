@@ -277,24 +277,52 @@ export default function BookingPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 px-6 md:px-20 bg-white border-t border-zinc-200 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center z-50">
-        <div className="space-y-0.5">
-          <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider max-w-[180px] md:max-w-none truncate">
-            Ghế đã chọn: <span className="text-zinc-800 font-black">{selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || 'Chưa chọn'}</span>
-          </p>
-          <div className="text-2xl font-[1000] text-red-600 italic tracking-tight">
-            {(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ
+{/* ================= GIAO DIỆN THANH CHỌN COMBO MỚI (FLOAT BOTTOM BAR LAYOUT) ================= */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl bg-white/90 backdrop-blur-md border border-zinc-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-50 transition-all duration-300">
+        
+        {/* Cột trái: Tóm tắt thông tin ghế & Giá tiền */}
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          {/* Icon ghế minh họa trực quan */}
+          <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-100 text-red-600 flex items-center justify-center shrink-0 shadow-sm hidden sm:flex">
+            <Armchair size={22} />
+          </div>
+          
+          <div className="space-y-1 min-w-0 flex-1 sm:flex-none">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">Ghế đã chọn</span>
+              {selectedSeats.length > 0 && (
+                <span className="px-1.5 py-0.5 bg-zinc-100 text-zinc-700 font-mono font-bold text-[9px] rounded border border-zinc-200">
+                  {selectedSeats.length} ghế
+                </span>
+              )}
+            </div>
+            
+            <p className="text-sm text-zinc-800 font-black tracking-tight truncate max-w-[260px] md:max-w-md">
+              {selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || (
+                <span className="text-zinc-400 font-medium italic text-xs">Vui lòng chọn vị trí...</span>
+              )}
+            </p>
           </div>
         </div>
-        
-        <button 
-          onClick={handleNext} 
-          className="px-6 md:px-8 py-4 bg-red-600 text-white font-black uppercase italic rounded-2xl hover:bg-red-700 active:scale-95 shadow-[0_4px_15px_rgba(220,38,38,0.2)] transition-all flex items-center gap-2 text-xs tracking-wider shrink-0"
-        >
-          Chọn Combo 
-          <ArrowRight size={15}/>
-        </button>
+
+        {/* Cột phải: Tổng tiền & Nút hành động */}
+        <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-zinc-100">
+          <div className="text-left sm:text-right">
+            <span className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">Tổng tạm tính</span>
+            <div className="text-2xl font-[1000] text-red-600 italic tracking-tight leading-none mt-0.5">
+              {(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ
+            </div>
+          </div>
+          
+          <button 
+            onClick={handleNext} 
+            className="px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase italic rounded-xl active:scale-95 shadow-[0_4px_15px_rgba(220,38,38,0.15)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.25)] transition-all duration-200 flex items-center gap-2 text-xs tracking-wider shrink-0 group"
+          >
+            <span>Chọn Combo</span>
+            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+
       </div>
     </div>
   );
