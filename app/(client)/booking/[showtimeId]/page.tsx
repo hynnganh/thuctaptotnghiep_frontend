@@ -277,30 +277,51 @@ export default function BookingPage({ params }: PageProps) {
         </div>
       </div>
 
-{/* ================= GIAO DIỆN THANH CHỌN COMBO SIÊU NGẮN & GỌN ================= */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-auto max-w-[92%] bg-white/95 backdrop-blur-sm border border-zinc-200 shadow-[0_8px_25px_rgba(0,0,0,0.08)] rounded-xl p-2.5 pl-4 flex items-center gap-6 z-50 transition-all duration-300">
+{/* ================= GIAO DIỆN THANH CHỌN COMBO MỚI (FLOAT BOTTOM BAR LAYOUT) ================= */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-3xl bg-white/90 backdrop-blur-md border border-zinc-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-50 transition-all duration-300">
         
-        {/* Khối thông tin: Ghế & Tiền gom chung một cụm */}
-        <div className="flex flex-col justify-center min-w-[120px] max-w-[200px] md:max-w-xs">
-          <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider truncate">
-            {selectedSeats.length > 0 
-              ? `Ghế (${selectedSeats.length}): ${selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ')}`
-              : 'Chưa chọn ghế'
-            }
-          </p>
-          <div className="text-xl font-[1000] text-red-600 italic tracking-tight mt-0.5 leading-none">
-            {(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ
+        {/* Cột trái: Tóm tắt thông tin ghế & Giá tiền */}
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          {/* Icon ghế minh họa trực quan */}
+          <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-100 text-red-600 flex items-center justify-center shrink-0 shadow-sm hidden sm:flex">
+            <Armchair size={22} />
+          </div>
+          
+          <div className="space-y-1 min-w-0 flex-1 sm:flex-none">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">Ghế đã chọn</span>
+              {selectedSeats.length > 0 && (
+                <span className="px-1.5 py-0.5 bg-zinc-100 text-zinc-700 font-mono font-bold text-[9px] rounded border border-zinc-200">
+                  {selectedSeats.length} ghế
+                </span>
+              )}
+            </div>
+            
+            <p className="text-sm text-zinc-800 font-black tracking-tight truncate max-w-[260px] md:max-w-md">
+              {selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || (
+                <span className="text-zinc-400 font-medium italic text-xs">Vui lòng chọn vị trí...</span>
+              )}
+            </p>
           </div>
         </div>
 
-        {/* Nút bấm thu nhỏ, đặt sát cạnh phải */}
-        <button 
-          onClick={handleNext} 
-          className="px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-black uppercase italic rounded-lg active:scale-95 shadow-sm transition-all duration-200 flex items-center gap-1.5 text-[11px] tracking-wide shrink-0 group"
-        >
-          <span>Combo</span>
-          <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
-        </button>
+        {/* Cột phải: Tổng tiền & Nút hành động */}
+        <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-zinc-100">
+          <div className="text-left sm:text-right">
+            <span className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">Tổng tạm tính</span>
+            <div className="text-2xl font-[1000] text-red-600 italic tracking-tight leading-none mt-0.5">
+              {(selectedSeats.reduce((sum, s) => sum + s.price, 0)).toLocaleString()}đ
+            </div>
+          </div>
+          
+          <button 
+            onClick={handleNext} 
+            className="px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase italic rounded-xl active:scale-95 shadow-[0_4px_15px_rgba(220,38,38,0.15)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.25)] transition-all duration-200 flex items-center gap-2 text-xs tracking-wider shrink-0 group"
+          >
+            <span>Chọn Combo</span>
+            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
 
       </div>
     </div>
