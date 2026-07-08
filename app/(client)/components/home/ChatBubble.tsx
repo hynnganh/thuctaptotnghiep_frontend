@@ -31,10 +31,10 @@ interface CinemaItem {
 
 export default function ChatBubble() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false); // State quản lý cụm 2 options bật ra
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false); 
   const [inputValue, setInputValue] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
-  const [showConfirmClose, setShowConfirmClose] = useState(false); // State hiển thị modal confirm custom thay confirm hệ thống
+  const [showConfirmClose, setShowConfirmClose] = useState(false); 
   
   const [chatMode, setChatMode] = useState<"BOT" | "SELECT_CINEMA" | "ADMIN">(() => {
     if (typeof window !== 'undefined') return (localStorage.getItem("guest_chat_mode") as any) || "BOT";
@@ -212,7 +212,7 @@ export default function ChatBubble() {
       setChatMode(mode);
     }
     setIsOpen(true);
-    setIsOptionsOpen(false); // Đóng khay lựa chọn lại sau khi đã nhấn chọn một chế độ
+    setIsOptionsOpen(false); 
     connectWebSocket();
   };
 
@@ -255,7 +255,8 @@ export default function ChatBubble() {
     let newY = e.clientY - dragStart.current.y;
     if (typeof window !== 'undefined') {
       newX = Math.max(0, Math.min(newX, window.innerWidth - 395));
-      newY = Math.max(0, Math.min(newY, window.innerHeight - 615));
+      // Khống chế biên dưới: Không cho kéo thanh header tụt quá sâu xuống đáy màn hình gây mất form gõ chữ
+      newY = Math.max(0, Math.min(newY, window.innerHeight - 150));
     }
     setPosition({ x: newX, y: newY });
   };
@@ -325,8 +326,13 @@ export default function ChatBubble() {
   return (
     <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end select-none font-sans antialiased text-zinc-800">
       <div 
-        className={`fixed bg-white border border-zinc-200 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden transform transition-all duration-300 ${isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"}`}
-        style={{ width: "385px", height: "600px", left: `${position.x}px`, top: `${position.y}px`, transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s, left 0.1s ease-out, top 0.1s ease-out' }}
+        className={`fixed bg-white border border-zinc-200 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden transform transition-all duration-300 w-[385px] h-[600px] ${isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"}`}
+        style={{ 
+          maxHeight: "calc(100vh - 80px)", 
+          left: `${position.x}px`, 
+          top: `${position.y}px`, 
+          transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s, left 0.1s ease-out, top 0.1s ease-out' 
+        }}
       >
         
         {/* LIGHT HEADER */}
@@ -366,7 +372,7 @@ export default function ChatBubble() {
           </div>
         </div>
 
-        {/* CUSTOM CONFIRMATION DIALOG (Thay cho window.confirm) */}
+        {/* CUSTOM CONFIRMATION DIALOG */}
         {showConfirmClose && (
           <div className="absolute inset-0 bg-zinc-950/40 backdrop-blur-sm z-[999] flex items-center justify-center p-5 animate-in fade-in duration-200">
             <div className="bg-white border border-zinc-200 rounded-2xl p-5 w-full max-w-[300px] text-center shadow-xl animate-in zoom-in-95 duration-200">
@@ -493,39 +499,33 @@ export default function ChatBubble() {
               <div ref={messagesEndRef} />
             </div>
 
-{/* THANH NHẬP CHAT TRẮNG SÁNG */}
-<form onSubmit={sendMessage} className="p-3 bg-zinc-50 border-t border-zinc-200 flex items-center gap-2 shrink-0 relative z-20 w-full box-border">
-  <input 
-    type="text" 
-    value={inputValue} 
-    onChange={(e) => setInputValue(e.target.value)} 
-    disabled={isConnecting} 
-    placeholder={chatMode === "ADMIN" ? "Nhập câu hỏi gửi quản lý chi nhánh..." : "Hỏi AI phim hot đang chiếu tuần này..."} 
-    className="flex-1 min-w-0 bg-white border border-zinc-200 rounded-xl px-3 py-2.5 text-xs text-zinc-800 focus:outline-none focus:border-[#e11d48] focus:ring-1 focus:ring-[#e11d48]/20 transition-all placeholder:text-zinc-400 disabled:opacity-50 shadow-inner" 
-  />
-  <button 
-    type="submit" 
-    disabled={!inputValue.trim() || isConnecting} 
-    className={`w-9 h-9 text-white rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed transform active:scale-95 shrink-0 shadow-sm ${
-      chatMode === "ADMIN" ? "bg-emerald-600 hover:bg-emerald-500" : "bg-[#e11d48] hover:bg-[#be123c]"
-    }`}
-  >
-    {isConnecting ? <Loader2 size={15} className="animate-spin text-white" /> : <Send size={13} className="ml-0.5" />}
-  </button>
-</form>
+            {/* THANH NHẬP CHAT TRẮNG SÁNG */}
+            <form onSubmit={sendMessage} className="p-3 bg-zinc-50 border-t border-zinc-200 flex items-center gap-2 shrink-0 relative z-20 w-full box-border">
+              <input 
+                type="text" 
+                value={inputValue} 
+                onChange={(e) => setInputValue(e.target.value)} 
+                disabled={isConnecting} 
+                placeholder={chatMode === "ADMIN" ? "Nhập câu hỏi gửi quản lý chi nhánh..." : "Hỏi AI phim hot đang chiếu tuần này..."} 
+                className="flex-1 min-w-0 bg-white border border-zinc-200 rounded-xl px-3 py-2.5 text-xs text-zinc-800 focus:outline-none focus:border-[#e11d48] focus:ring-1 focus:ring-[#e11d48]/20 transition-all placeholder:text-zinc-400 disabled:opacity-50 shadow-inner" 
+              />
+              <button 
+                type="submit" 
+                disabled={!inputValue.trim() || isConnecting} 
+                className={`w-9 h-9 text-white rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed transform active:scale-95 shrink-0 shadow-sm ${
+                  chatMode === "ADMIN" ? "bg-emerald-600 hover:bg-emerald-500" : "bg-[#e11d48] hover:bg-[#be123c]"
+                }`}
+              >
+                {isConnecting ? <Loader2 size={15} className="animate-spin text-white" /> : <Send size={13} className="ml-0.5" />}
+              </button>
+            </form>
           </>
         )}
       </div>
 
-      {/* ======================================================== */}
-      {/* KHU VỰC ĐIỀU KHIỂN ĐÓNG/MỞ OPTIONS BẰNG MỘT ICON DUY NHẤT */}
-      {/* ======================================================== */}
+      {/* ICON TRIGGER TRẠNG THÁI */}
       <div className="flex flex-col items-end gap-3 relative">
-        
-        {/* Khay chứa 2 Options - Bật lên khi state isOptionsOpen === true */}
         <div className={`flex flex-col gap-2.5 items-end transition-all duration-300 transform origin-bottom ${isOptionsOpen && !isOpen ? "scale-100 opacity-100 translate-y-0 pointer-events-auto" : "scale-90 opacity-0 translate-y-4 pointer-events-none"}`}>
-          
-          {/* Nút 1: Trợ lý tự động AI */}
           <button 
             onClick={() => handleOpenChatWithMode("BOT")} 
             className="group flex items-center gap-3 bg-white border border-zinc-200 hover:border-[#e11d48]/40 px-5 py-3 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] text-zinc-800 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95"
@@ -539,7 +539,6 @@ export default function ChatBubble() {
             </div>
           </button>
 
-          {/* Nút 2: Kết nối Quản lý rạp */}
           <button 
             onClick={() => handleOpenChatWithMode("SELECT_CINEMA")} 
             className="group flex items-center gap-3 bg-white border border-zinc-200 hover:border-emerald-500/40 px-5 py-3 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] text-zinc-800 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95"
@@ -554,7 +553,6 @@ export default function ChatBubble() {
           </button>
         </div>
 
-        {/* NÚT TRIGGER ICON CHÍNH (Đại diện thu gọn duy nhất) */}
         <button
           onClick={() => {
             if (isOpen) {
@@ -579,7 +577,6 @@ export default function ChatBubble() {
         </button>
       </div>
 
-      {/* STYLE SCROLLBAR HỆ THỐNG */}
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; } 
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
