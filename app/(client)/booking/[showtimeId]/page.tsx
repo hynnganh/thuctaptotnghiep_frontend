@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ArrowRight, Loader2, Armchair } from 'lucide-react';
 import { apiRequest } from '@/app/lib/api'; 
@@ -7,25 +7,46 @@ import SeatMap from '../SeatMap';
 import toast, { Toaster } from 'react-hot-toast';
 import { getImageUrl } from "@/app/lib/api";
 
-export default function BookingPage({ params }: { params: Promise<{ showtimeId: string }> }) {
-  const { showtimeId } = use(params);
+interface PageProps {
+  params: Promise<{ showtimeId: string }>;
+}
+
+export default function BookingPage({ params }: PageProps) {
   const router = useRouter();
+  const [showtimeId, setShowtimeId] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true);
   const [dbSeats, setDbSeats] = useState<any[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<any[]>([]);
   const [showtimeInfo, setShowtimeInfo] = useState<any>(null);
 
-  // 1. Tải sơ đồ ghế hệ thống và kiểm tra luồng điều hướng để quyết định khôi phục hay xóa sạch
+  // 1. Giải quyết Promise params một cách an toàn để tránh block UI luồng đồng bộ
   useEffect(() => {
+    params.then((resolvedParams) => {
+      setShowtimeId(resolvedParams.showtimeId);
+    }).catch(() => {
+      toast.error("Không tìm thấy thông tin lịch chiếu!");
+      setFetching(false);
+    });
+  }, [params]);
+
+  // 2. Tải sơ đồ ghế hệ thống và kiểm tra luồng điều hướng
+  useEffect(() => {
+    if (!showtimeId) return;
+
     const loadData = async () => {
       try {
+        setFetching(true);
         const [resSeats, resInfo] = await Promise.all([
           apiRequest(`/api/v1/seats/showtime/${showtimeId}`),
           apiRequest(`/api/v1/showtimes/${showtimeId}`)
         ]);
+        
         if (resSeats.ok && resInfo.ok) {
-          setDbSeats((await resSeats.json()).data);
-          setShowtimeInfo((await resInfo.json()).data);
+          const seatsData = await resSeats.json();
+          const infoData = await resInfo.json();
+          
+          setDbSeats(seatsData.data || seatsData);
+          setShowtimeInfo(infoData.data || infoData);
 
           const saved = sessionStorage.getItem('booking_data');
           const isBack = sessionStorage.getItem('is_back_from_combos');
@@ -44,11 +65,12 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
           }
         }
       } catch (err) { 
-        toast.error("Lỗi tải dữ liệu!"); 
+        toast.error("Lỗi tải dữ liệu hệ thống!"); 
       } finally { 
         setFetching(false); 
       }
     };
+    
     loadData();
   }, [showtimeId]);
 
@@ -149,6 +171,7 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
   };
 
   const handleNext = () => {
+    if (!showtimeId) return;
     if (selectedSeats.length === 0) {
       toast.error("Vui lòng chọn ghế để tiếp tục!", {
         duration: 3000,
@@ -183,8 +206,8 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
       cinemaItemId: showtimeInfo?.cinemaItem?.id,
       cinemaName: showtimeInfo?.cinemaItem?.cinema?.name, 
       roomName: showtimeInfo?.cinemaItem?.name,
-      date: new Date(showtimeInfo?.startTime).toLocaleDateString('vi-VN'),
-      time: new Date(showtimeInfo?.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      date: showtimeInfo?.startTime ? new Date(showtimeInfo.startTime).toLocaleDateString('vi-VN') : '',
+      time: showtimeInfo?.startTime ? new Date(showtimeInfo.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '',
       selectedSeats, 
       seatPrice: selectedSeats.reduce((sum, s) => sum + s.price, 0)
     };
@@ -193,7 +216,13 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
     router.push(`/booking/${showtimeId}/combos`);
   };
 
-  if (fetching) return <div className="h-screen bg-[#f8f9fa] flex items-center justify-center"><Loader2 className="animate-spin text-red-600" /></div>;
+  if (fetching || !showtimeId) {
+    return (
+      <div className="h-screen bg-[#f8f9fa] flex items-center justify-center">
+        <Loader2 className="animate-spin text-red-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 flex flex-col font-sans selection:bg-red-600 selection:text-white relative">
@@ -210,7 +239,7 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         <div className="w-20"></div>
       </div>
 
-      {/* KHU VỰC SƠ ĐỒ GHẾ CHÍNH - Bổ sung pb-32 để không bao giờ bị đè bởi Bottom Bar */}
+      {/* KHU VỰC SƠ ĐỒ GHẾ CHÍNH */}
       <div className="flex-1 pt-10 pb-32 px-4 max-w-7xl mx-auto w-full">
         <div className="select-none"> 
           <SeatMap 
@@ -248,7 +277,7 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         </div>
       </div>
 
-      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG - Đổi từ sticky thành fixed, căn chỉnh padding an toàn */}
+      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG */}
       <div className="fixed bottom-0 left-0 right-0 p-6 px-6 md:px-20 bg-white border-t border-zinc-200 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center z-50">
         <div className="space-y-0.5">
           <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider max-w-[180px] md:max-w-none truncate">
