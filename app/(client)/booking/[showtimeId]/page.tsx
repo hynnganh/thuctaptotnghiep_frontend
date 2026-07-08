@@ -196,11 +196,11 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
   if (fetching) return <div className="h-screen bg-[#f8f9fa] flex items-center justify-center"><Loader2 className="animate-spin text-red-600" /></div>;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 flex flex-col font-sans selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-[#f8f9fa] text-zinc-800 flex flex-col font-sans selection:bg-red-600 selection:text-white relative">
       <Toaster />
       
       {/* THANH TIÊU ĐỀ TRÊN SÁNG */}
-      <div className="p-6 bg-white border-b border-zinc-200/80 flex items-center justify-between shadow-sm">
+      <div className="p-6 bg-white border-b border-zinc-200/80 flex items-center justify-between shadow-sm sticky top-0 z-50">
         <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-400 hover:text-zinc-700 transition-colors uppercase text-[10px] font-black italic">
           <ChevronLeft size={16}/> Quay lại
         </button>
@@ -210,8 +210,8 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         <div className="w-20"></div>
       </div>
 
-      {/* KHU VỰC SƠ ĐỒ GHẾ CHÍNH */}
-      <div className="flex-1 py-10 px-4 max-w-7xl mx-auto w-full">
+      {/* KHU VỰC SƠ ĐỒ GHẾ CHÍNH - Bổ sung pb-32 để không bao giờ bị đè bởi Bottom Bar */}
+      <div className="flex-1 pt-10 pb-32 px-4 max-w-7xl mx-auto w-full">
         <div className="select-none"> 
           <SeatMap 
             dbSeats={dbSeats} 
@@ -248,10 +248,10 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         </div>
       </div>
 
-      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG */}
-      <div className="p-6 px-20 bg-white border-t border-zinc-200 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] flex justify-between items-center sticky bottom-0 z-50">
+      {/* THANH TRẠNG THÁI THANH TOÁN DƯỚI ĐÁY SÁNG - Đổi từ sticky thành fixed, căn chỉnh padding an toàn */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 px-6 md:px-20 bg-white border-t border-zinc-200 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex justify-between items-center z-50">
         <div className="space-y-0.5">
-          <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">
+          <p className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider max-w-[180px] md:max-w-none truncate">
             Ghế đã chọn: <span className="text-zinc-800 font-black">{selectedSeats.map(s => s.seatRow + s.seatNumber).join(', ') || 'Chưa chọn'}</span>
           </p>
           <div className="text-2xl font-[1000] text-red-600 italic tracking-tight">
@@ -261,7 +261,7 @@ export default function BookingPage({ params }: { params: Promise<{ showtimeId: 
         
         <button 
           onClick={handleNext} 
-          className="px-8 py-4 bg-red-600 text-white font-black uppercase italic rounded-2xl hover:bg-red-700 active:scale-98 shadow-[0_4px_15px_rgba(220,38,38,0.2)] transition-all flex items-center gap-2 text-xs tracking-wider"
+          className="px-6 md:px-8 py-4 bg-red-600 text-white font-black uppercase italic rounded-2xl hover:bg-red-700 active:scale-95 shadow-[0_4px_15px_rgba(220,38,38,0.2)] transition-all flex items-center gap-2 text-xs tracking-wider shrink-0"
         >
           Chọn Combo 
           <ArrowRight size={15}/>
